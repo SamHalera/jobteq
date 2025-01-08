@@ -7,7 +7,7 @@ framework:
   form:
     csrf_protection:
       enabled: true
-      field_name: "_token"
+      field_name: "_csrf_token"
   #esi: true
   #fragments: true
 

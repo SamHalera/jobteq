@@ -47,7 +47,7 @@ class RegistrationFormType extends AbstractType
             ->add('_token', FormType::class, [
                 'mapped' => false, // CSRF tokens should not be mapped to the entity
                 'csrf_protection' => true,
-                'csrf_field_name' => '_token',
+                'csrf_field_name' => '_csrf_token',
                 'csrf_token_id' => 'registration_form', // A unique identifier for this form
             ]);;
     }
