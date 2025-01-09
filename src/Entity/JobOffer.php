@@ -5,6 +5,8 @@ namespace App\Entity;
 use App\Repository\JobOfferRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation\Slug;
+use Gedmo\Mapping\Annotation\Timestampable;
 
 #[ORM\Entity(repositoryClass: JobOfferRepository::class)]
 class JobOffer
@@ -21,13 +23,19 @@ class JobOffer
     private ?string $description = null;
 
     #[ORM\Column]
+    #[Timestampable(on: 'create')]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column]
+    #[Timestampable(on: 'update')]
     private ?\DateTimeImmutable $updatedAt = null;
 
     #[ORM\Column(enumType: JobOfferStatusEnum::class)]
     private JobOfferStatusEnum $status;
+
+    #[ORM\Column(length: 255)]
+    #[Slug(fields: ['title'])]
+    private ?string $slug = null;
 
 
     public function getId(): ?int
@@ -95,5 +103,17 @@ class JobOffer
     public function getStatusString(): string
     {
         return $this->status->value;
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(string $slug): static
+    {
+        $this->slug = $slug;
+
+        return $this;
     }
 }

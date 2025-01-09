@@ -7,6 +7,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\IsTrue;
@@ -49,7 +50,9 @@ class RegistrationFormType extends AbstractType
                 'csrf_protection' => true,
                 'csrf_field_name' => '_csrf_token',
                 'csrf_token_id' => 'registration_form', // A unique identifier for this form
-            ]);;
+            ])
+
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void

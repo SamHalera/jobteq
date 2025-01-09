@@ -1,10 +1,13 @@
 {% extends "base.html.twig" %}
 {% block body %}
-
-
 	<div class="container">
+
 		<a href="{{path('app_job_offer_admin_index')}}" class="btn btn-info">back</a>
-		<h1>NEW JOB OFFER</h1>
+		<h1>EDIT
+			<span class="text-primary">{{jobOffer.title}}</span>
+		</h1>
+
+
 		{{form_start(form)}}
 
 
