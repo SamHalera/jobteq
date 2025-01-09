@@ -33,7 +33,7 @@
 						<td>{{job.statusString}}</td>
 						<td>
 							<a href="{{path('app_joboffer_edit', {slug : job.slug})}}" class="btn btn-warning">edit</a>
-							<a href="#" class="btn btn-danger">delete</a>
+							<a href="{{path('app_joboffer_delete', {slug : job.slug})}}" class="btn btn-danger">delete</a>
 						</td>
 					</tr>
 				{% endfor %}

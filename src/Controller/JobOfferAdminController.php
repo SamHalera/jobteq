@@ -67,4 +67,17 @@ class JobOfferAdminController extends AbstractController
             'jobOffer' => $jobOffer
         ]);
     }
+    #[Route('/joboffer/delete/{slug}', name: 'app_joboffer_delete')]
+    public function delete(
+
+        EntityManagerInterface $em,
+        #[MapEntity(mapping: ['slug' => 'slug'])]
+        JobOffer $jobOffer
+    ): Response {
+
+
+        $em->remove($jobOffer);
+        $em->flush();
+        return $this->redirectToRoute('app_job_offer_admin_index');
+    }
 }
