@@ -18,7 +18,6 @@ class JobOfferAdminController extends AbstractController
     #[Route('/', name: 'app_job_offer_admin_index')]
     public function index(JobOfferRepository $jobRepo): Response
     {
-
         $jobOffers = $jobRepo->findAll();
         return $this->render('job_offer_admin/index.html.twig', [
             'jobOffers' => $jobOffers,

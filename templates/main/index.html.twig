@@ -6,6 +6,12 @@
 {% block body %}
 
 
-	<div>
-		<h1>HOMEPAGE<h1></div>
+	<div class="container">
+		<h1>HOMEPAGE<h1>
+				<div class="d-flex justify-content-start gap-5">
+					{% for jobOffer in jobOffers %}
+						{% include "/main/partials/_jobOfferCard.html.twig" %}
+					{% endfor %}
+				</div>
+			</div>
 		{% endblock %}
