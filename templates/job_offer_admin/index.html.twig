@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}JOBTEQ | DASHBOARD
+{% endblock %}
+
+{% block body %}
+
+
+	<div class="container">
+		<h1 class="mb-4">JOB OFFERS</h1>
+
+		<div>
+			<a href="{{path('app_joboffer_create')}}" class="btn btn-primary">new job offer</a>
+		</div>
+
+		<table class="table table-stripped">
+			<thead>
+				<tr class="text-center">
+					<th>ID</th>
+					<th>Title</th>
+					<th>Created at</th>
+					<th>Status</th>
+					<th>Actions</th>
+				</tr>
+			</thead>
+			<tbody>
+
+
+				{% for job in jobOffers %}
+
+					{% set statusClass = "primary" %}
+					{% if job.statusString == "draft" %}
+						{% set statusClass = "warning" %}
+					{% elseif job.statusString == "archived" %}
+						{% set statusClass = "secondary" %}
+
+					{% endif %}
+
+					<tr class="text-center">
+						<td>{{job.id}}</td>
+						<td>{{job.title}}</td>
+						<td>{{job.createdAt|date('Y/m/d')}}</td>
+						<td>
+							<span class="badge rounded-pill bg-{{statusClass}}">{{job.statusString}}
+							</span>
+						</td>
+						<td>
+							<a href="{{path('app_job_offer_public', {slug : job.slug})}}" class="btn btn-info">public view</a>
+							<a href="{{path('app_joboffer_edit', {slug : job.slug})}}" class="btn btn-warning">edit</a>
+							<a href="{{path('app_joboffer_delete', {slug : job.slug})}}" class="btn btn-danger">delete</a>
+						</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+
+		</table>
+	</div>
+{% endblock %}
