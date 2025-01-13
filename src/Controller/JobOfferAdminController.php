@@ -70,13 +70,17 @@ class JobOfferAdminController extends AbstractController
     }
     #[Route('/joboffer/delete/{slug}', name: 'app_joboffer_delete')]
     public function delete(
-
         EntityManagerInterface $em,
         #[MapEntity(mapping: ['slug' => 'slug'])]
         JobOffer $jobOffer
     ): Response {
 
+        // dd("hello inside controller");
+        if ($jobOffer->getStatusString() === "published") {
 
+            $this->addFlash('danger', 'Job offer cannot be deleted because is published!');
+            return $this->redirectToRoute('app_job_offer_admin_index');
+        }
         $em->remove($jobOffer);
         $em->flush();
 

@@ -20,7 +20,7 @@
 
 		{% for label, messages in app.flashes %}
 			{% for message in messages %}
-				<div class="alert alert-{{label}} alert-dismissible fade show w-50 mx-auto my-4 flash-alert" role="alert">
+				<div class="alert alert-{{label}} alert-dismissible fade show w-50 mx-auto my-4 flash-alert alert-position" role="alert">
 					{{message}}
 					<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 				</div>

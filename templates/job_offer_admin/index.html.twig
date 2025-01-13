@@ -44,11 +44,24 @@
 							<span class="badge rounded-pill bg-{{statusClass}}">{{job.statusString}}
 							</span>
 						</td>
-						<td>
+						<td class="d-flex gap-3 justify-content-center bg-light">
 							<a href="{{path('app_job_offer_public', {slug : job.slug})}}" class="btn btn-info">public view</a>
 							<a href="{{path('app_joboffer_edit', {slug : job.slug})}}" class="btn btn-warning">edit</a>
-							<a href="{{path('app_joboffer_delete', {slug : job.slug})}}" class="btn btn-danger">delete</a>
+
+							<form action="{{path('app_joboffer_delete', {slug : job.slug})}}" data-action="submit-confirm#onSubmit" method="POST" {{stimulus_controller('submit-confirm', { title : 'Remove this item?', icon: 'warning', confirmButtonText: 'Yes remove it', submitAsync: true } )}}>
+								<input type="hidden" name="_token" value="{{ csrf_token('remove_item') }}"/>
+								<button class="btn btn-danger">
+									delete
+								</button>
+							</form>
+							{# <a href="{{path('app_joboffer_delete', {slug : job.slug})}}" class="btn btn-danger">delete</a> #}
 						</td>
+					</tr>
+
+
+				{% else %}
+					<tr>
+						<td class="text-center py-4 text-info fw-bold" colspan="5">No JobOffer</td>
 					</tr>
 				{% endfor %}
 			</tbody>
