@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/job_offer/admin')]
+#[Route('/jobteq/admin')]
 class JobOfferAdminController extends AbstractController
 {
     #[Route('/', name: 'app_job_offer_admin_index')]
@@ -36,6 +36,7 @@ class JobOfferAdminController extends AbstractController
             $em->persist($jobOffer);
             $em->flush();
 
+            $this->addFlash('success', 'A new job offer has been created!');
             return $this->redirectToRoute('app_job_offer_admin_index');
         }
 
@@ -58,6 +59,7 @@ class JobOfferAdminController extends AbstractController
 
             $em->persist($jobOffer);
             $em->flush();
+            $this->addFlash('success', 'Job offer has been updated!');
 
             return $this->redirectToRoute('app_job_offer_admin_index');
         }
@@ -78,6 +80,8 @@ class JobOfferAdminController extends AbstractController
 
         $em->remove($jobOffer);
         $em->flush();
+
+        $this->addFlash('success', 'Job offer has been deleted!');
         return $this->redirectToRoute('app_job_offer_admin_index');
     }
 }
