@@ -37,6 +37,10 @@ class Category
     #[Slug(fields: ['name'])]
     private ?string $slug = null;
 
+    #[ORM\ManyToOne(inversedBy: 'categories')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?SuperAdminJobConfig $superAdminJobConfig = null;
+
     public function __construct()
     {
         $this->jobOffers = new ArrayCollection();
@@ -124,6 +128,18 @@ class Category
     public function setSlug(string $slug): static
     {
         $this->slug = $slug;
+
+        return $this;
+    }
+
+    public function getSuperAdminJobConfig(): ?SuperAdminJobConfig
+    {
+        return $this->superAdminJobConfig;
+    }
+
+    public function setSuperAdminJobConfig(?SuperAdminJobConfig $superAdminJobConfig): static
+    {
+        $this->superAdminJobConfig = $superAdminJobConfig;
 
         return $this;
     }

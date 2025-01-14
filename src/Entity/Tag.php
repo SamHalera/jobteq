@@ -38,6 +38,10 @@ class Tag
     #[ORM\ManyToMany(targetEntity: JobOffer::class, mappedBy: 'categories')]
     private Collection $jobOffers;
 
+    #[ORM\ManyToOne(inversedBy: 'tags')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?SuperAdminJobConfig $superAdminJobConfig = null;
+
     public function __construct()
     {
         $this->jobOffers = new ArrayCollection();
@@ -122,6 +126,18 @@ class Tag
         if ($this->jobOffers->removeElement($jobOffer)) {
             $jobOffer->removeCategory($this);
         }
+
+        return $this;
+    }
+
+    public function getSuperAdminJobConfig(): ?SuperAdminJobConfig
+    {
+        return $this->superAdminJobConfig;
+    }
+
+    public function setSuperAdminJobConfig(?SuperAdminJobConfig $superAdminJobConfig): static
+    {
+        $this->superAdminJobConfig = $superAdminJobConfig;
 
         return $this;
     }
