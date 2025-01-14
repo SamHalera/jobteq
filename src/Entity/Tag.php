@@ -2,15 +2,15 @@
 
 namespace App\Entity;
 
-use App\Repository\CategoryRepository;
+use App\Repository\TagRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation\Slug;
 use Gedmo\Mapping\Annotation\Timestampable;
 
-#[ORM\Entity(repositoryClass: CategoryRepository::class)]
-class Category
+#[ORM\Entity(repositoryClass: TagRepository::class)]
+class Tag
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -27,19 +27,35 @@ class Category
     #[ORM\Column(enumType: StatusEnum::class)]
     private StatusEnum $status;
 
-    /**
-     * @var Collection<int, JobOffer>
-     */
-    #[ORM\OneToMany(targetEntity: JobOffer::class, mappedBy: 'category')]
-    private Collection $jobOffers;
 
     #[ORM\Column(length: 255)]
     #[Slug(fields: ['name'])]
     private ?string $slug = null;
 
+    /**
+     * @var Collection<int, JobOffer>
+     */
+    #[ORM\ManyToMany(targetEntity: JobOffer::class, mappedBy: 'categories')]
+    private Collection $jobOffers;
+
     public function __construct()
     {
         $this->jobOffers = new ArrayCollection();
+    }
+
+    public function getStatus(): StatusEnum
+    {
+        return $this->status;
+    }
+
+    public function setStatus(StatusEnum $status): self
+    {
+        $this->status = $status;
+        return $this;
+    }
+    public function getStatusString(): string
+    {
+        return $this->status->value;
     }
 
     public function getId(): ?int
@@ -71,19 +87,16 @@ class Category
         return $this;
     }
 
-    public function getStatus(): StatusEnum
+    public function getSlug(): ?string
     {
-        return $this->status;
+        return $this->slug;
     }
 
-    public function setStatus(StatusEnum $status): self
+    public function setSlug(string $slug): static
     {
-        $this->status = $status;
+        $this->slug = $slug;
+
         return $this;
-    }
-    public function getStatusString(): string
-    {
-        return $this->status->value;
     }
 
     /**
@@ -98,7 +111,7 @@ class Category
     {
         if (!$this->jobOffers->contains($jobOffer)) {
             $this->jobOffers->add($jobOffer);
-            $jobOffer->setCategory($this);
+            $jobOffer->addTag($this);
         }
 
         return $this;
@@ -107,23 +120,8 @@ class Category
     public function removeJobOffer(JobOffer $jobOffer): static
     {
         if ($this->jobOffers->removeElement($jobOffer)) {
-            // set the owning side to null (unless already changed)
-            if ($jobOffer->getCategory() === $this) {
-                $jobOffer->setCategory(null);
-            }
+            $jobOffer->removeCategory($this);
         }
-
-        return $this;
-    }
-
-    public function getSlug(): ?string
-    {
-        return $this->slug;
-    }
-
-    public function setSlug(string $slug): static
-    {
-        $this->slug = $slug;
 
         return $this;
     }
