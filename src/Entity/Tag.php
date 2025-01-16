@@ -35,7 +35,7 @@ class Tag
     /**
      * @var Collection<int, JobOffer>
      */
-    #[ORM\ManyToMany(targetEntity: JobOffer::class, mappedBy: 'categories')]
+    #[ORM\ManyToMany(targetEntity: JobOffer::class, mappedBy: 'tags')]
     private Collection $jobOffers;
 
     #[ORM\ManyToOne(inversedBy: 'tags')]

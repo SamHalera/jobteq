@@ -2,16 +2,18 @@
 
 namespace App\Controller;
 
-use App\Entity\Category;
-use App\Form\CategoryType;
-use App\Form\JobOfferType;
-use App\Repository\CategoryRepository;
+
+use App\Entity\SuperAdminJobConfig;
+
+use App\Form\JobOffersConfigurationType;
+
+use App\Repository\SuperAdminJobConfigRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Security\Http\Authenticator\FormLoginAuthenticator;
+
 
 #[Route('/admin')]
 class AdminController extends AbstractController
@@ -24,35 +26,85 @@ class AdminController extends AbstractController
             'controller_name' => 'AdminController',
         ]);
     }
-
-    #[Route('/category', name: 'app_admin_category_index')]
-    public function categories(CategoryRepository $categoryRepo): Response
+    #[Route('/configurations', name: 'app_admin_config_index')]
+    public function indexConfigurations(SuperAdminJobConfigRepository $jobConfigRepo): Response
     {
 
-        $categories = $categoryRepo->findAll();
-        return $this->render('admin/category/index.html.twig', [
-            'categories' => $categories,
+        $jobOffersConfigurations = $jobConfigRepo->findAll();
+        return $this->render('admin/configurations/index.html.twig', [
+            'jobOffersConfigurations' => $jobOffersConfigurations,
+
         ]);
     }
-    #[Route('/category/new', name: 'app_admin_category_create')]
-    public function createCategory(EntityManagerInterface $em, Request $request): Response
+
+
+    #[Route('/job-offers-configuration/create', name: 'app_admin_config_create')]
+    public function jobOffersConfigurationCreate(Request $request, EntityManagerInterface $em)
     {
 
-        $category = new Category();
-        $form = $this->createForm(CategoryType::class, $category);
+        $jobOffersConfiguration = new SuperAdminJobConfig();
+        $form = $this->createForm(
+            JobOffersConfigurationType::class,
+            $jobOffersConfiguration
+        );
 
         $form->handleRequest($request);
+
+
         if ($form->isSubmitted() && $form->isValid()) {
 
 
-            $em->persist($category);
+
+            $em->persist($jobOffersConfiguration);
             $em->flush();
-            $this->addFlash('success', 'A new category has been created!');
-            return $this->redirectToRoute('app_admin_category_index');
+            return $this->redirectToRoute('app_admin_config_index');
         }
 
-        return $this->render('admin/category/new-category.html.twig', [
-            'form' => $form,
+        $template = '/admin/configurations/job-offers-config/create.html.twig';
+        return $this->render($template, [
+            'form' => $form
         ]);
+    }
+    #[Route('/job-offers-configuration/{id}', name: 'app_admin_job_offers_config_index')]
+    public function jobOffersConfiguration(SuperAdminJobConfig $jobConfig, EntityManagerInterface $em, Request $request): Response
+    {
+
+
+        $form = $this->createForm(
+            JobOffersConfigurationType::class,
+            $jobConfig
+        );
+
+        $form->handleRequest($request);
+
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+
+            $em->persist($jobConfig);
+            $em->flush();
+            return $this->redirectToRoute('app_admin_job_offers_config_index');
+        }
+        return $this->render('admin/configurations/job-offers-config/index.html.twig', [
+            'jobConfig' => $jobConfig,
+            'form' => $form
+        ]);
+    }
+
+
+
+
+    #[Route('/job-offers-configuration/delete/{id}', name: 'app_admin_config_delete')]
+    public function jobOffersConfigurationDelete(SuperAdminJobConfig $jobConfig, EntityManagerInterface $em): Response
+    {
+
+        if (!$jobConfig) {
+            $this->createNotFoundException();
+        }
+        $em->remove($jobConfig);
+        $em->flush();
+
+
+        return $this->redirectToRoute('app_admin_config_index');
     }
 }

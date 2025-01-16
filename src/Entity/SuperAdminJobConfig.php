@@ -6,6 +6,7 @@ use App\Repository\SuperAdminJobConfigRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: SuperAdminJobConfigRepository::class)]
 class SuperAdminJobConfig
@@ -18,14 +19,18 @@ class SuperAdminJobConfig
     /**
      * @var Collection<int, Category>
      */
-    #[ORM\OneToMany(targetEntity: Category::class, mappedBy: 'superAdminJobConfig', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: Category::class, mappedBy: 'superAdminJobConfig', orphanRemoval: true, cascade: ["persist"])]
     private Collection $categories;
 
     /**
      * @var Collection<int, Tag>
      */
-    #[ORM\OneToMany(targetEntity: Tag::class, mappedBy: 'superAdminJobConfig', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: Tag::class, mappedBy: 'superAdminJobConfig', orphanRemoval: true, cascade: ["persist"])]
     private Collection $tags;
+
+    #[ORM\Column(length: 255)]
+    #[Assert\NotBlank]
+    private ?string $name = null;
 
     public function __construct()
     {
@@ -94,6 +99,18 @@ class SuperAdminJobConfig
                 $tag->setSuperAdminJobConfig(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): static
+    {
+        $this->name = $name;
 
         return $this;
     }
