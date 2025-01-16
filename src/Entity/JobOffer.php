@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\JobOfferRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation\Slug;
@@ -30,12 +32,27 @@ class JobOffer
     #[Timestampable(on: 'update')]
     private ?\DateTimeImmutable $updatedAt = null;
 
-    #[ORM\Column(enumType: JobOfferStatusEnum::class)]
-    private JobOfferStatusEnum $status;
+    #[ORM\Column(enumType: StatusEnum::class)]
+    private StatusEnum $status;
 
     #[ORM\Column(length: 255)]
     #[Slug(fields: ['title'])]
     private ?string $slug = null;
+
+    #[ORM\ManyToOne(inversedBy: 'jobOffers')]
+    #[ORM\JoinColumn(nullable: true)]
+    private ?Category $category = null;
+
+    /**
+     * @var Collection<int, Tag>
+     */
+    #[ORM\ManyToMany(targetEntity: Tag::class, inversedBy: 'jobOffers')]
+    private Collection $tags;
+
+    public function __construct()
+    {
+        $this->tags = new ArrayCollection();
+    }
 
 
     public function getId(): ?int
@@ -90,12 +107,12 @@ class JobOffer
 
         return $this;
     }
-    public function getStatus(): JobOfferStatusEnum
+    public function getStatus(): StatusEnum
     {
         return $this->status;
     }
 
-    public function setStatus(JobOfferStatusEnum $status): self
+    public function setStatus(StatusEnum $status): self
     {
         $this->status = $status;
         return $this;
@@ -113,6 +130,42 @@ class JobOffer
     public function setSlug(string $slug): static
     {
         $this->slug = $slug;
+
+        return $this;
+    }
+
+    public function getCategory(): ?Category
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?Category $category): static
+    {
+        $this->category = $category;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Tag>
+     */
+    public function getTags(): Collection
+    {
+        return $this->tags;
+    }
+
+    public function addTag(Tag $tag): static
+    {
+        if (!$this->tags->contains($tag)) {
+            $this->tags->add($tag);
+        }
+
+        return $this;
+    }
+
+    public function removeCategory(Tag $tag): static
+    {
+        $this->tags->removeElement($tag);
 
         return $this;
     }
