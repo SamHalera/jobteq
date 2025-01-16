@@ -3,12 +3,15 @@
 namespace App\Controller;
 
 use App\Entity\LicenseConfig;
+use App\Entity\RoleConfig;
 use App\Entity\SuperAdminJobConfig;
 
 use App\Form\JobOffersConfigurationType;
 use App\Form\LicenseConfigType;
+use App\Form\RoleConfigType;
 use App\Repository\LicenseConfigRepository;
 use App\Repository\LicenseRepository;
+use App\Repository\RoleConfigRepository;
 use App\Repository\SuperAdminJobConfigRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -24,6 +27,7 @@ class AdminController extends AbstractController
 
     const ADMIN_FOLDER_JOB_CONFIG = '/admin/configurations/job-offers-config/';
     const ADMIN_FOLDER_LICENSE_CONFIG = '/admin/configurations/license-config/';
+    const ADMIN_FOLDER_ROLE_CONFIG = '/admin/configurations/role-config/';
 
     #[Route('/', name: 'app_admin_index')]
     public function index(EntityManagerInterface $em): Response
@@ -35,14 +39,19 @@ class AdminController extends AbstractController
     }
 
     #[Route('/configurations', name: 'app_admin_config_index')]
-    public function indexConfigurations(SuperAdminJobConfigRepository $jobConfigRepo, LicenseConfigRepository $licenceConfigRepo): Response
-    {
+    public function indexConfigurations(
+        SuperAdminJobConfigRepository $jobConfigRepo,
+        LicenseConfigRepository $licenceConfigRepo,
+        RoleConfigRepository $roleConfigRepo
+    ): Response {
 
         $jobOffersConfigurations = $jobConfigRepo->findAll();
         $licensesConfigurations = $licenceConfigRepo->findAll();
+        $rolesConfigurations = $roleConfigRepo->findAll();
         return $this->render('admin/configurations/index.html.twig', [
             'jobOffersConfigurations' => $jobOffersConfigurations,
-            'licensesConfigurations' => $licensesConfigurations
+            'licensesConfigurations' => $licensesConfigurations,
+            'rolesConfigurations' => $rolesConfigurations
 
         ]);
     }
@@ -177,6 +186,73 @@ class AdminController extends AbstractController
             $this->createNotFoundException();
         }
         $em->remove($licenseConfig);
+        $em->flush();
+
+
+        return $this->redirectToRoute('app_admin_config_index');
+    }
+    /////// ROLES CONFIGURATION
+
+    #[Route('/role-configuration/create', name: 'app_admin_role_config_create')]
+    public function roleConfigCreate(Request $request, EntityManagerInterface $em): Response
+    {
+
+        $roleConfiguration = new RoleConfig();
+
+        $form = $this->createForm(RoleConfigType::class, $roleConfiguration);
+
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+
+            $em->persist($roleConfiguration);
+            $em->flush();
+
+            return $this->redirectToRoute('app_admin_config_index');
+        }
+
+
+        return $this->render(self::ADMIN_FOLDER_ROLE_CONFIG . 'create.html.twig', [
+            'form' => $form
+        ]);
+    }
+
+    #[Route('/role-configuration/{id}', name: 'app_admin_role_config_index')]
+    public function roleConfiguration(RoleConfig $roleConfig, EntityManagerInterface $em, Request $request): Response
+    {
+
+
+        $form = $this->createForm(
+            RoleConfigType::class,
+            $roleConfig
+        );
+
+        $form->handleRequest($request);
+
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+
+            $em->persist($roleConfig);
+            $em->flush();
+            return $this->redirectToRoute('app_admin_role_config_index', ['id' => $roleConfig->getId()]);
+        }
+        return $this->render(self::ADMIN_FOLDER_ROLE_CONFIG . 'index.html.twig', [
+            'roleConfig' => $roleConfig,
+            'form' => $form
+        ]);
+    }
+
+    #[Route('/role-configuration/delete/{id}', name: 'app_admin_role_config_delete')]
+    public function roleConfigurationDelete(RoleConfig $roleConfig, EntityManagerInterface $em,): Response
+    {
+
+        if (!$roleConfig) {
+            $this->createNotFoundException();
+        }
+        $em->remove($roleConfig);
         $em->flush();
 
 

@@ -13,7 +13,8 @@ button[data-entry-action="add"] {
 
 div#license_config_licenses fieldset,
 div#job_offers_configuration_categories fieldset,
-div#job_offers_configuration_tags fieldset {
+div#job_offers_configuration_tags fieldset,
+div#role_config_roles fieldset {
   background-color: rgb(223, 223, 223);
   border-radius: 8px;
   padding: 20px;

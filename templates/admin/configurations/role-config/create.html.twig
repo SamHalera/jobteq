@@ -1,0 +1,20 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+
+	<div class="container" {{stimulus_controller('reload' )}}>
+		<h1 class="mb-4">Role Configurations</h1>
+
+
+		<div class="form-wrapper w-75 mx-auto">
+
+			{{form_start(form)}}
+			{{form_row(form.name)}}
+			<div class="border border-primary p-3 rounded my-3">
+				{{form_row(form.roles)}}
+			</div>
+
+			{{form_end(form)}}
+		</div>
+	</div>
+{% endblock %}
