@@ -2,7 +2,7 @@
 
 namespace App\Form;
 
-use App\Entity\SuperAdminJobConfig;
+use App\Entity\LicenseConfig;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -11,7 +11,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
-class JobOffersConfigurationType extends AbstractType
+class LicenseConfigType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -23,50 +23,32 @@ class JobOffersConfigurationType extends AbstractType
                     ])
                 ]
             ])
-            ->add('categories', CollectionType::class, [
-                'entry_type' => CategoryType::class,
+            ->add('licenses', CollectionType::class, [
+                'entry_type' => LicenseType::class,
                 'entry_options' => ['label' => false],
                 'allow_add' => true,
                 'allow_delete' => true,
                 'prototype' => true,
                 'by_reference' => false,
+                'prototype_name' => '__name2__',
                 'attr' => [
                     // 'data-controller' => 'collection',
                     'class' => "d-flex flex-wrap gap-4",
                     'data-prototype-name' => '__name2__',
-                    'data-entry-add-label' => 'Add Category',
-                    'data-entry-remove-label' => 'Remove Category',
+                    'data-entry-add-label' => 'Add Licese',
+                    'data-entry-remove-label' => 'Remove Licese',
 
                 ]
             ])
-            ->add('tags', CollectionType::class, [
-                'entry_type' => TagType::class,
-                'entry_options' => ['label' => false],
-                'allow_add' => true,
-                'allow_delete' => true,
-                'prototype' => true,
-                'by_reference' => false,
-                'attr' => [
-                    // 'data-controller' => 'collection',
-                    'class' => "d-flex flex-wrap gap-4",
-                    'data-prototype-name' => '__name2__',
-                    'data-entry-add-label' => 'Add Tag',
-                    'data-entry-remove-label' => 'Remove Tag',
+            ->add('validate', SubmitType::class)
 
-                ]
-            ])
-            ->add("validate", SubmitType::class, [
-                // 'attr' => [
-                //     'data-action' => "modal-form#submitForm"
-                // ]
-            ])
         ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => SuperAdminJobConfig::class,
+            'data_class' => LicenseConfig::class,
         ]);
     }
 }

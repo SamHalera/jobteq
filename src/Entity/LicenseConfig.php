@@ -21,7 +21,7 @@ class LicenseConfig
     /**
      * @var Collection<int, License>
      */
-    #[ORM\OneToMany(targetEntity: License::class, mappedBy: 'licenseConfig', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: License::class, mappedBy: 'licenseConfig', orphanRemoval: true, cascade: ['persist'])]
     private Collection $licenses;
 
     public function __construct()

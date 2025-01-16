@@ -27,7 +27,13 @@
 				<div class="card-body">
 					<h4 class="card-title">Licence Configurations</h4>
 					<p class="card-text">Configurations for companys' license</p>
-					<a href="#" class="btn btn-primary">Create config</a>
+					{% if licensesConfigurations|length > 0 %}
+						<a href="{{path('app_admin_license_config_index', {id : licensesConfigurations[0].id})}}" class="">{{licensesConfigurations[0].name}}</a>
+					{% else %}
+
+						<a href="{{path('app_admin_license_config_create')}}" class="btn btn-primary">Create config</a>
+					{% endif %}
+
 				</div>
 			</div>
 			<div class="card text-center" style="width: 20rem;">

@@ -23,6 +23,10 @@ class License
     #[ORM\JoinColumn(nullable: false)]
     private ?LicenseConfig $licenseConfig = null;
 
+
+    #[ORM\Column(enumType: StatusEnum::class)]
+    private StatusEnum $status;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -62,5 +66,19 @@ class License
         $this->licenseConfig = $licenseConfig;
 
         return $this;
+    }
+    public function getStatus(): StatusEnum
+    {
+        return $this->status;
+    }
+
+    public function setStatus(StatusEnum $status): self
+    {
+        $this->status = $status;
+        return $this;
+    }
+    public function getStatusString(): string
+    {
+        return $this->status->value;
     }
 }
