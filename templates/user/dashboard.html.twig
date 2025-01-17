@@ -11,14 +11,14 @@
 
 		{% if app.user.getRoles|length == 1 and app.user.getRoles[0] == "ROLE_USER" %}
 
-			{% include "user/partials/_dashboard-complete-registration.html.twig" %}
+			{% include "user/partials/dashboard/_dashboard-complete-registration.html.twig" %}
 
 		{% elseif is_granted('ROLE_RECRUITER') %}
-			{% include "user/partials/_dashboard-recruiter.html.twig" %}
+			{% include "user/partials/dashboard/_dashboard-recruiter.html.twig" %}
 		{% elseif is_granted('ROLE_MANAGER') %}
-			{% include "user/partials/_dashboard-manager.html.twig" %}
+			{% include "user/partials/dashboard/_dashboard-manager.html.twig" %}
 		{% elseif is_granted('ROLE_CANDIDATE') %}
-			{% include "user/partials/_dashboard-candidate.html.twig" %}
+			{% include "user/partials/dashboard/_dashboard-candidate.html.twig" %}
 
 		{% endif %}
 
