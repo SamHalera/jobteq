@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}JOBTEQ | RECRUITER REGISTER
+{% endblock %}
+
+{% block body %}
+
+
+	<div class="container">
+		<h1 class="mb-4">RECRUITER REGISTER</h1>
+
+
+		{% if app.user.getRoles|length == 1 and app.user.getRoles[0] == "ROLE_USER" %}
+
+			<div class=" mx-auto bg-secondary-subtle d-flex flex-column p-5 w-75 gap-3">
+
+				<h2>Complete your registration</h2>
+
+				<div class="my-4">
+
+					{{form_start(form)}}
+
+
+					{{form_row(form.name)}}
+					{{form_row(form.logo)}}
+					{{form_row(form.description)}}
+
+					{{form_end(form)}}
+				</div>
+			</div>
+
+		{% endif %}
+
+
+	</div>
+{% endblock %}
