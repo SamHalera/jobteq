@@ -3,11 +3,11 @@
 namespace App\Controller;
 
 use App\Entity\Company;
-use App\Entity\License;
 use App\Entity\User;
 use App\Form\CompanyRegistrationType;
 use App\Repository\LicenseRepository;
 use Doctrine\ORM\EntityManagerInterface;
+
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

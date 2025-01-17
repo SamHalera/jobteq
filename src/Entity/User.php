@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -44,6 +46,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\ManyToOne(inversedBy: 'users', cascade: ['persist'])]
     private ?Company $company = null;
+
+    /**
+     * @var Collection<int, Invitation>
+     */
+    #[ORM\OneToMany(targetEntity: Invitation::class, mappedBy: 'createdBy', orphanRemoval: true)]
+    private Collection $invitations;
+
+    public function __construct()
+    {
+        $this->invitations = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -164,6 +177,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setCompany(?Company $company): static
     {
         $this->company = $company;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Invitation>
+     */
+    public function getInvitations(): Collection
+    {
+        return $this->invitations;
+    }
+
+    public function addInvitation(Invitation $invitation): static
+    {
+        if (!$this->invitations->contains($invitation)) {
+            $this->invitations->add($invitation);
+            $invitation->setCreatedBy($this);
+        }
+
+        return $this;
+    }
+
+    public function removeInvitation(Invitation $invitation): static
+    {
+        if ($this->invitations->removeElement($invitation)) {
+            // set the owning side to null (unless already changed)
+            if ($invitation->getCreatedBy() === $this) {
+                $invitation->setCreatedBy(null);
+            }
+        }
 
         return $this;
     }
