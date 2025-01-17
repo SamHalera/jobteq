@@ -11,7 +11,14 @@
 
 	</ul>
 	<div class="card-body text-center">
-		<a href="#" class="btn btn-primary">I choose this!</a>
+
+		<form action="{{path('app_company_accept_license', {id: company.id, licenseId: license.id })}}" data-action="modal-confirmation#onSubmit" method="POST" {{stimulus_controller('modal-confirmation', {formUrl : path('app_company_accept_license', {id: company.id, licenseId: license.id} ), title : 'Do You Accpet this License?' , icon: 'success' , confirmbuttontext: 'Yes I accept it' , submitasync: true } )}}>
+			<input type="hidden" name="_token" value="{{ csrf_token('remove_item') }}"/>
+			<button class="btn btn-primary">
+				{{ ux_icon('bi:basket', { height: '20px', width: '20px'}) }}
+				validate this license
+			</button>
+		</form>
 
 	</div>
 </div>

@@ -5,24 +5,20 @@
 
 {% block body %}
 
-
 	<div class="container">
 		<h1 class="mb-4">MY DASHBOARD</h1>
 
 
 		{% if app.user.getRoles|length == 1 and app.user.getRoles[0] == "ROLE_USER" %}
 
-			<div class="text-center mx-auto bg-secondary-subtle d-flex flex-column p-5 w-75 gap-3">
+			{% include "user/partials/_dashboard-complete-registration.html.twig" %}
 
-				<h2>Complete your registration</h2>
-
-				<div class="my-4 d-flex gap-4 justify-content-center align-items-center">
-
-					<a href="{{path('app_company_register')}}" class="btn btn-primary">recruiter</a>
-					<span>OR</span>
-					<button class="btn btn-info">candidate</button>
-				</div>
-			</div>
+		{% elseif is_granted('ROLE_RECRUITER') %}
+			{% include "user/partials/_dashboard-recruiter.html.twig" %}
+		{% elseif is_granted('ROLE_MANAGER') %}
+			{% include "user/partials/_dashboard-manager.html.twig" %}
+		{% elseif is_granted('ROLE_CANDIDATE') %}
+			{% include "user/partials/_dashboard-candidate.html.twig" %}
 
 		{% endif %}
 

@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Company;
 use App\Entity\License;
+use App\Entity\User;
 use App\Form\CompanyRegistrationType;
 use App\Repository\LicenseRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -25,13 +26,19 @@ class CompanyController extends AbstractController
     public function userRecruiterRegister(Request $request, EntityManagerInterface $em): Response
     {
 
-        $user = $this->getUser();
         $company = new Company();
         $form = $this->createForm(CompanyRegistrationType::class, $company);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            $user = $this->getUser();
+            if ($user instanceof User) {
+                $user->setRoles(["ROLE_MANAGER"]);
+                $em->persist($user);
+            }
+
 
             $company->addUser($user);
             $em->persist($company);
@@ -45,7 +52,7 @@ class CompanyController extends AbstractController
     }
 
 
-    #[ROute('/company/{id}/manage-license', name: 'app_company_manage_license')]
+    #[Route('/company/manage-license/{id<\d+>}', name: 'app_company_manage_license')]
     public function payLicense(Company $company, LicenseRepository $licenseRepo): Response
     {
 
@@ -54,5 +61,25 @@ class CompanyController extends AbstractController
             'company' => $company,
             'licenses' => $licenses
         ]);
+    }
+    #[Route('/company/accept-license/{id<\d+>}/{licenseId}', name: 'app_company_accept_license')]
+    public function acceptLicense(Company $company,  $licenseId, LicenseRepository $licenseRepo, EntityManagerInterface $em): Response
+    {
+
+        if (!$company) {
+            $this->createNotFoundException();
+        }
+
+        $license = $licenseRepo->find($licenseId);
+
+        if (!$license) {
+            $this->createNotFoundException();
+        }
+
+        $company->setLicense($license);
+
+        $em->flush();
+
+        return $this->redirectToRoute('app_login');
     }
 }
