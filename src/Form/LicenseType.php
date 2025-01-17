@@ -35,6 +35,14 @@ class LicenseType extends AbstractType
                     ])
                 ]
             ])
+            ->add('price', NumberType::class, [
+                'label' => 'License\'s price in €',
+                'constraints' => [
+                    new Positive([
+                        'message' => 'Only positive numbers'
+                    ])
+                ]
+            ])
             ->add('status', EnumType::class, [
                 'class' => StatusEnum::class
             ])

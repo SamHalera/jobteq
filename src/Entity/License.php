@@ -35,6 +35,9 @@ class License
     #[ORM\OneToMany(targetEntity: Company::class, mappedBy: 'license')]
     private Collection $companies;
 
+    #[ORM\Column(nullable: true)]
+    private ?int $price = null;
+
     public function __construct()
     {
         $this->companies = new ArrayCollection();
@@ -121,6 +124,18 @@ class License
                 $company->setLicense(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getPrice(): ?int
+    {
+        return $this->price;
+    }
+
+    public function setPrice(?int $price): static
+    {
+        $this->price = $price;
 
         return $this;
     }

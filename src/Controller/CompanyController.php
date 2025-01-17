@@ -3,7 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\Company;
+use App\Entity\License;
 use App\Form\CompanyRegistrationType;
+use App\Repository\LicenseRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -31,13 +33,26 @@ class CompanyController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            // $em->persist($user);
-            // $em->flush();
+            $company->addUser($user);
+            $em->persist($company);
+            $em->flush();
 
-            return $this->redirectToRoute('app_user_dashboard');
+            return $this->redirectToRoute('app_company_manage_license', ['id' => $company->getId()]);
         }
         return $this->render('/company/company-register.html.twig', [
             'form' => $form
+        ]);
+    }
+
+
+    #[ROute('/company/{id}/manage-license', name: 'app_company_manage_license')]
+    public function payLicense(Company $company, LicenseRepository $licenseRepo): Response
+    {
+
+        $licenses = $licenseRepo->findBy(['status' => 'published']);
+        return $this->render('company/manage-license.html.twig', [
+            'company' => $company,
+            'licenses' => $licenses
         ]);
     }
 }

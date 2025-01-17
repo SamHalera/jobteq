@@ -23,13 +23,11 @@ class CompanyRegistrationType extends AbstractType
         $builder
             ->add('name', TextType::class)
             ->add('logo', TextType::class, [
-                'label' => 'Your Logo - TODO'
+                'label' => 'Your Logo - TODO',
+                'required' => false
             ])
             ->add('description', TextareaType::class)
             ->add("validate", SubmitType::class)
-
-
-
         ;
     }
 
