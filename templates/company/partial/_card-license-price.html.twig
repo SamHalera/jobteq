@@ -1,0 +1,24 @@
+<div class="card" style="width: 18rem;">
+	<div class="card-body text-center">
+		<h5 class="card-title">{{license.name}}</h5>
+		<p class='text-primary fw-semibold fs-3'>{{license.price}}€</p>
+	</div>
+	<ul class="list-group list-group-flush text-center">
+		<li class="list-group-item">
+			<span class="text-primary fw-bold">{{license.credits}}</span>
+			published job offers
+		</li>
+
+	</ul>
+	<div class="card-body text-center">
+
+		<form action="{{path('app_company_accept_license', {id: company.id, licenseId: license.id })}}" data-action="modal-confirmation#onSubmit" method="POST" {{stimulus_controller('modal-confirmation', {formUrl : path('app_company_accept_license', {id: company.id, licenseId: license.id} ), title : 'Do You Accpet this License?' , icon: 'success' , confirmbuttontext: 'Yes I accept it' , submitasync: true } )}}>
+			<input type="hidden" name="_token" value="{{ csrf_token('remove_item') }}"/>
+			<button class="btn btn-primary">
+				{{ ux_icon('bi:basket', { height: '20px', width: '20px'}) }}
+				validate this license
+			</button>
+		</form>
+
+	</div>
+</div>

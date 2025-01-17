@@ -1,0 +1,18 @@
+<div class="text-center mx-auto bg-secondary-subtle d-flex flex-column p-5 w-75 gap-3">
+
+	<h2>Complete your registration</h2>
+
+	<div class="my-4 d-flex gap-4 justify-content-center align-items-center">
+
+		<a href="{{path('app_company_register')}}" class="btn btn-primary">recruiter</a>
+		<span>OR</span>
+		{# <a href="" class="btn btn-info">candidate</a> #}
+		<form action="{{path('app_user_candidate_register', {id: app.user.id})}}" data-action="modal-confirmation#onSubmit" method="POST" {{stimulus_controller('modal-confirmation', {formUrl : path('app_user_candidate_register', {id: app.user.id} ), title : 'Are you a candidate, looking for new opportunities?' , icon: 'success' , confirmbuttontext: 'Yes I am!' , submitasync: true } )}}>
+			<input type="hidden" name="_token" value="{{ csrf_token('remove_item') }}"/>
+			<button class="btn btn-primary">
+				{{ ux_icon('bi:person-check', { height: '20px', width: '20px'}) }}
+				candidate
+			</button>
+		</form>
+	</div>
+</div>

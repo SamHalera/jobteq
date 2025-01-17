@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}JOBTEQ |
+	{{company.name}}
+	MANAGE LICENSE
+{% endblock %}
+
+{% block body %}
+
+
+	<div class="container">
+		<h1 class="my-4 text-center">CHOOSE THE RIGHT LICENSE FOR
+			{{company.name}}</h1>
+
+		<div class="d-flex flex-wrap gap-4">
+			{% for license in licenses %}
+				{% include "company/partial/_card-license-price.html.twig" %}
+			{% endfor %}
+		</div>
+	</div>
+{% endblock %}
