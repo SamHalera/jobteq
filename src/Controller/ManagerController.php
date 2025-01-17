@@ -6,10 +6,12 @@ use App\Entity\Invitation;
 use App\Entity\InvitationStatusEnum;
 use App\Form\InvitationType;
 use App\Repository\InvitationRepository;
+use App\Service\MailerService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Uid\Uuid;
@@ -33,8 +35,9 @@ class ManagerController extends AbstractController
 
 
     #[Route('/invitations/new', name: 'app_manager_invitation_create')]
-    public function invitationCreate(Request $request, EntityManagerInterface $em): Response
+    public function invitationCreate(Request $request, EntityManagerInterface $em, MailerService $mailerService, MailerInterface $mailer): Response
     {
+
 
         $invitation = new Invitation();
         $form = $this->createForm(InvitationType::class, $invitation);
@@ -42,11 +45,12 @@ class ManagerController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
 
+            $currentUser = $this->getUser();
             $uid = Uuid::v7();
             $sendings = $invitation->getSendings();
             $invitation
                 ->setToken($uid)
-                ->setCreatedBy($this->getUser())
+                ->setCreatedBy($currentUser)
                 ->setStatus(InvitationStatusEnum::PENDING)
                 ->setSendings(1)
             ;
@@ -54,6 +58,7 @@ class ManagerController extends AbstractController
             $em->persist($invitation);
             $em->flush();
 
+            $mailerService->sendInvitationMail($mailer, $invitation, $currentUser);
             return $this->redirectToRoute('app_manager_invitation_index');
         }
 
@@ -103,6 +108,15 @@ class ManagerController extends AbstractController
     {
 
 
+
+        return $this->redirectToRoute('app_manager_invitation_index');
+    }
+    #[Route('/invitations/manage-invitation/{id}', name: 'app_manager_invitation_user_answer')]
+    public function invitationManage(Invitation $invitation): Response
+    {
+
+
+        dd($invitation->getToken());
 
         return $this->redirectToRoute('app_manager_invitation_index');
     }

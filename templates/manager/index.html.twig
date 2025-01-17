@@ -31,8 +31,9 @@
 					{% set statusClass = "warning" %}
 					{% if invitation.statusString == "accepted" %}
 						{% set statusClass = "success" %}
+					{% elseif invitation.statusString == "declined" %}
 
-
+						{% set statusClass = "danger" %}
 					{% endif %}
 
 					<tr class="text-center">
