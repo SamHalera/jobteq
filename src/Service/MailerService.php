@@ -23,7 +23,8 @@ class MailerService
                     'senderFirstname' => $currentUser->getFirstname(),
                     'senderLastname' => $currentUser->getLastname(),
                     'company' => $currentUser->getCompany()->getName(),
-                    'url' => $_ENV["FRONT_URL"] . '/register?invitation=' . $invitation->getId()
+                    // 'url' => $_ENV["FRONT_URL"] . '/register?invitation=' . $invitation->getId()
+                    'url' => $_ENV["FRONT_URL"] . '/user/manage-invitation/' . $invitation->getId()
                 ]
 
             ]);

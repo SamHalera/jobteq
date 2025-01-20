@@ -1,0 +1,41 @@
+{% extends "base.html.twig" %}
+{% block title %}JOBTEQ | ANSWER TO INVITATION
+{% endblock %}
+
+{% block body %}
+
+
+	<div class="container">
+		<h1 class="mb-4">Your Manager Invitation</h1>
+
+
+		<div class="text-center mx-auto bg-secondary-subtle d-flex flex-column p-5 w-75 gap-3">
+
+			<h2>You have been invited by yout Manager</h2>
+
+			{% if invitation.statusString == "pending" %}
+
+
+				<div class="my-4 d-flex gap-4 justify-content-center align-items-center">
+
+
+					<a href="{{url('app_register', {invitation : invitation.id})}}" class="btn btn-primary">accept</a>
+					<span>OR</span>
+					<form action="{{path('app_invitation_user_decline', {id: invitation.id})}}" data-action="modal-confirmation#onSubmit" method="POST" {{stimulus_controller('modal-confirmation', {formUrl : path('app_invitation_user_decline', {id: invitation.id} ), title : 'You are goning to decline this invitation. Are you sure?' , icon: 'warning' , confirmbuttontext: 'Yes I am!' , submitasync: true } )}}>
+						<input type="hidden" name="_token" value="{{ csrf_token('remove_item') }}"/>
+						<button class="btn btn-primary">
+							decline
+						</button>
+					</form>
+				</div>
+			{% else %}
+				<div class="my-4 d-flex gap-4 justify-content-center align-items-center">
+					<h3>You have already responded to this invitation</h3>
+				</div>
+			{% endif %}
+
+		</div>
+
+
+	</div>
+{% endblock %}

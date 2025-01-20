@@ -35,7 +35,7 @@ class CompanyController extends AbstractController
 
             $user = $this->getUser();
             if ($user instanceof User) {
-                $user->setRoles(["ROLE_MANAGER"]);
+                $user->setCompany($company);
                 $em->persist($user);
             }
 
@@ -80,6 +80,6 @@ class CompanyController extends AbstractController
 
         $em->flush();
 
-        return $this->redirectToRoute('app_login');
+        return $this->redirectToRoute('app_user_dashboard');
     }
 }

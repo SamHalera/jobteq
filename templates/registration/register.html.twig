@@ -13,11 +13,20 @@
 		{{form_row(registrationForm.firstname)}}
 		{{form_row(registrationForm.lastname)}}
 		{{form_row(registrationForm.thumbnail)}}
+
+		{% if app.session.get('invitationIsAccepted') is null %}
+
+			{{ form_row(registrationForm.youAre , { attr : {'class': 'd-flex gap-3'}}) }}
+
+		{% endif %}
+
 		{{ form_row(registrationForm.email) }}
 		{{ form_row(registrationForm.plainPassword, {
             label: 'Password'
         }) }}
 		{{ form_row(registrationForm.agreeTerms) }}
+		{{ form_row(registrationForm._token)
+		}}
 
 		<button type="submit" class="btn btn-primary">Register</button>
 		{{ form_end(registrationForm) }}
