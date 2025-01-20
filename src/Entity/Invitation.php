@@ -37,6 +37,9 @@ class Invitation
 
     #[ORM\Column]
     private ?int $sendings = null;
+
+    #[ORM\ManyToOne(inversedBy: 'invitations')]
+    private ?Company $company = null;
     public function getId(): ?int
     {
         return $this->id;
@@ -124,6 +127,18 @@ class Invitation
     public function setSendings(int $sendings): static
     {
         $this->sendings = $sendings;
+
+        return $this;
+    }
+
+    public function getCompany(): ?Company
+    {
+        return $this->company;
+    }
+
+    public function setCompany(?Company $company): static
+    {
+        $this->company = $company;
 
         return $this;
     }

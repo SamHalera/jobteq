@@ -2,8 +2,10 @@
 
 namespace App\Controller;
 
+use App\Entity\Company;
 use App\Entity\Invitation;
 use App\Entity\InvitationStatusEnum;
+use App\Entity\User;
 use App\Form\InvitationType;
 use App\Repository\InvitationRepository;
 use App\Service\MailerService;
@@ -26,7 +28,11 @@ class ManagerController extends AbstractController
         if (!$user) {
             $this->createNotFoundException();
         }
-        $invitations = $invitationRepo->findAll();
+        $id = null;
+        if ($user instanceof User) {
+            $id = $user->getId();
+        }
+        $invitations = $invitationRepo->findInvitationsByCreatedBy($id);
 
         return $this->render('manager/index.html.twig', [
             'invitations' => $invitations,
@@ -37,28 +43,35 @@ class ManagerController extends AbstractController
     #[Route('/invitations/new', name: 'app_manager_invitation_create')]
     public function invitationCreate(Request $request, EntityManagerInterface $em, MailerService $mailerService, MailerInterface $mailer): Response
     {
-
+        $currentUser = $this->getUser();
 
         $invitation = new Invitation();
         $form = $this->createForm(InvitationType::class, $invitation);
 
+
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $currentUser = $this->getUser();
+            $company = null;
+            if ($currentUser instanceof User) {
+
+                $company = $currentUser->getCompany();
+            }
             $uid = Uuid::v7();
-            $sendings = $invitation->getSendings();
+
             $invitation
                 ->setToken($uid)
+                ->setCompany($company)
                 ->setCreatedBy($currentUser)
                 ->setStatus(InvitationStatusEnum::PENDING)
                 ->setSendings(1)
             ;
-
             $em->persist($invitation);
             $em->flush();
 
             $mailerService->sendInvitationMail($mailer, $invitation, $currentUser);
+
+
             return $this->redirectToRoute('app_manager_invitation_index');
         }
 
@@ -104,19 +117,18 @@ class ManagerController extends AbstractController
         ]);
     }
     #[Route('/invitations/re-send-email/{id}', name: 'app_manager_invitation_resend_email')]
-    public function invitationResendEmail(Invitation $invitation, EntityManagerInterface $em): Response
+    public function invitationResendEmail(Invitation $invitation, EntityManagerInterface $em,  MailerService $mailerService, MailerInterface $mailer): Response
     {
 
 
 
-        return $this->redirectToRoute('app_manager_invitation_index');
-    }
-    #[Route('/invitations/manage-invitation/{id}', name: 'app_manager_invitation_user_answer')]
-    public function invitationManage(Invitation $invitation): Response
-    {
+        $currentUser = $this->getUser();
+        $mailerService->sendInvitationMail($mailer, $invitation, $currentUser);
 
-
-        dd($invitation->getToken());
+        $sendings = $invitation->getSendings() + 1;
+        $invitation->setSendings($sendings);
+        $em->persist($invitation);
+        $em->flush();
 
         return $this->redirectToRoute('app_manager_invitation_index');
     }

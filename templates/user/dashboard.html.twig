@@ -9,16 +9,16 @@
 		<h1 class="mb-4">MY DASHBOARD</h1>
 
 
+		{# {% include "user/partials/dashboard/_dashboard-complete-registration.html.twig" %} #}
 		{% if app.user.getRoles|length == 1 and app.user.getRoles[0] == "ROLE_USER" %}
 
-			{% include "user/partials/dashboard/_dashboard-complete-registration.html.twig" %}
 
-		{% elseif is_granted('ROLE_RECRUITER') %}
-			{% include "user/partials/dashboard/_dashboard-recruiter.html.twig" %}
-		{% elseif is_granted('ROLE_MANAGER') %}
-			{% include "user/partials/dashboard/_dashboard-manager.html.twig" %}
-		{% elseif is_granted('ROLE_CANDIDATE') %}
-			{% include "user/partials/dashboard/_dashboard-candidate.html.twig" %}
+			{% elseif is_granted('ROLE_RECRUITER') %}
+				{% include "user/partials/dashboard/_dashboard-recruiter.html.twig" %}
+			{% elseif is_granted('ROLE_MANAGER') %}
+				{% include "user/partials/dashboard/_dashboard-manager.html.twig" %}
+			{% elseif is_granted('ROLE_CANDIDATE') %}
+				{% include "user/partials/dashboard/_dashboard-candidate.html.twig" %}
 
 		{% endif %}
 

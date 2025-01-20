@@ -27,7 +27,9 @@ class UserInvitationManager
         }
 
         $invitation->setStatus(InvitationStatusEnum::ACCEPTED);
-        $user->setRoles(['ROLE_RECRUITER']);
+        $user
+            ->setRoles(['ROLE_RECRUITER'])
+            ->setCompany($invitation->getCompany());
 
         $em->persist($invitation);
         $em->persist($user);
