@@ -4,16 +4,17 @@ namespace App\Controller;
 
 use App\Entity\LicenseConfig;
 use App\Entity\RoleConfig;
-use App\Entity\SuperAdminJobConfig;
-
+use App\Entity\SuperAdminJobConfig as EntitySuperAdminJobConfig;
 use App\Form\JobOffersConfigurationType;
 use App\Form\LicenseConfigType;
 use App\Form\RoleConfigType;
+use App\Repository\JobOfferRepository;
 use App\Repository\LicenseConfigRepository;
 use App\Repository\LicenseRepository;
 use App\Repository\RoleConfigRepository;
 use App\Repository\SuperAdminJobConfigRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Proxies\__CG__\App\Entity\SuperAdminJobConfig;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -60,8 +61,15 @@ class AdminController extends AbstractController
 
     /////// JOB OFFERS CONFIGURATION
     #[Route('/job-offers-configuration/create', name: 'app_admin_config_create')]
-    public function jobOffersConfigurationCreate(Request $request, EntityManagerInterface $em)
+    public function jobOffersConfigurationCreate(Request $request, EntityManagerInterface $em, SuperAdminJobConfigRepository $jobConfigRepository)
     {
+        $jobOffersConfigurations = $jobConfigRepository->findAll();
+
+        if (count($jobOffersConfigurations) > 0) {
+
+            $this->addFlash('danger', 'You can only have one configuration for job offers. Delete your current configuration in order to create a new one.');
+            return $this->redirectToRoute('app_admin_config_index');
+        }
 
         $jobOffersConfiguration = new SuperAdminJobConfig();
         $form = $this->createForm(
@@ -75,18 +83,17 @@ class AdminController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
 
 
-
             $em->persist($jobOffersConfiguration);
             $em->flush();
             return $this->redirectToRoute('app_admin_config_index');
         }
 
-        return $this->render(self::ADMIN_FOLDER_JOB_CONFIG . 'create.html.twig', [
+        return $this->render(self::ADMIN_FOLDER_JOB_CONFIG . 'create-config.html.twig', [
             'form' => $form
         ]);
     }
     #[Route('/job-offers-configuration/{id}', name: 'app_admin_job_offers_config_index')]
-    public function jobOffersConfiguration(SuperAdminJobConfig $jobConfig, EntityManagerInterface $em, Request $request): Response
+    public function jobOffersConfiguration(EntitySuperAdminJobConfig $jobConfig, EntityManagerInterface $em, Request $request): Response
     {
 
 
@@ -99,6 +106,7 @@ class AdminController extends AbstractController
 
 
         if ($form->isSubmitted() && $form->isValid()) {
+
 
 
             $em->persist($jobConfig);
@@ -129,9 +137,15 @@ class AdminController extends AbstractController
     /////// LICENCE CONFIGURATION
 
     #[Route('/license-configuration/create', name: 'app_admin_license_config_create')]
-    public function licenseConfigCreate(Request $request, EntityManagerInterface $em): Response
+    public function licenseConfigCreate(Request $request, EntityManagerInterface $em, LicenseConfigRepository $licenceConfigRepo): Response
     {
 
+        $licensesConfigurations = $licenceConfigRepo->findAll();
+        if (count($licensesConfigurations) > 0) {
+
+            $this->addFlash('danger', 'You can only have one license configuration. Delete your current configuration in order to create a new one.');
+            return $this->redirectToRoute('app_admin_config_index');
+        }
         $licenseConfiguration = new LicenseConfig();
 
         $form = $this->createForm(LicenseConfigType::class, $licenseConfiguration);
@@ -195,8 +209,15 @@ class AdminController extends AbstractController
     /////// ROLES CONFIGURATION
 
     #[Route('/role-configuration/create', name: 'app_admin_role_config_create')]
-    public function roleConfigCreate(Request $request, EntityManagerInterface $em): Response
+    public function roleConfigCreate(Request $request, EntityManagerInterface $em, RoleConfigRepository $roleConfigRepo): Response
     {
+
+        $roleConfigurations = $roleConfigRepo->findAll();
+        if (count($roleConfigurations) > 0) {
+
+            $this->addFlash('danger', 'You can only have one roles configuration. Delete your current configuration in order to create a new one.');
+            return $this->redirectToRoute('app_admin_config_index');
+        }
 
         $roleConfiguration = new RoleConfig();
 

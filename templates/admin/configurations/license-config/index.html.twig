@@ -5,7 +5,8 @@
 
 {% block body %}
 
-	<div class="container" {{stimulus_controller('reload' )}}>
+	<div class="container">
+		<a href="{{path('app_admin_config_index')}}" class="btn btn-primary my-4">back to configurations</a>
 		<h1 class="text-primary">
 			{{licenseConfig.name}}
 
@@ -17,17 +18,7 @@
 			</button>
 		</form>
 
-
-		<div class="form-wrapper w-75 mx-auto">
-
-			{{form_start(form)}}
-			{{form_row(form.name)}}
-			<div class="border border-primary p-3 rounded my-3">
-				{{form_row(form.licenses)}}
-			</div>
-
-			{{form_end(form)}}
-		</div>
+		{{include('admin/configurations/license-config/partial/_form-config-licenses.html.twig', {btnText : "Create"} )}}
 
 	</div>
 {% endblock %}

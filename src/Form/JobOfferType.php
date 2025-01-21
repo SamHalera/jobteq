@@ -2,8 +2,11 @@
 
 namespace App\Form;
 
+use App\Entity\Category;
 use App\Entity\JobOffer;
 use App\Entity\JobOfferStatusEnum;
+use App\Entity\StatusEnum;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EnumType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -24,14 +27,12 @@ class JobOfferType extends AbstractType
             ->add('description', TextareaType::class, [
                 'required' => true
             ])
-            // ->add('createdAt', null, [
-            //     'widget' => 'single_text',
-            // ])
-            // ->add('updatedAt', null, [
-            //     'widget' => 'single_text',
-            // ])
+            ->add('category', EntityType::class, [
+                'class' => Category::class,
+                'choice_label' => 'name'
+            ])
             ->add('status', EnumType::class, [
-                'class' => JobOfferStatusEnum::class
+                'class' => StatusEnum::class
             ])
             ->add('validate', SubmitType::class)
         ;

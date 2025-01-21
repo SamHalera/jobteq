@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\SuperAdminJobConfig;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -33,9 +34,9 @@ class JobOffersConfigurationType extends AbstractType
                 'attr' => [
                     // 'data-controller' => 'collection',
                     'class' => "d-flex flex-wrap gap-4",
-                    'data-prototype-name' => '__name2__',
-                    'data-entry-add-label' => 'Add Category',
-                    'data-entry-remove-label' => 'Remove Category',
+                    // 'data-prototype-name' => '__name2__',
+                    // 'data-entry-add-label' => 'Add Category',
+                    // 'data-entry-remove-label' => 'Remove Category',
 
                 ]
             ])
@@ -49,17 +50,24 @@ class JobOffersConfigurationType extends AbstractType
                 'attr' => [
                     // 'data-controller' => 'collection',
                     'class' => "d-flex flex-wrap gap-4",
-                    'data-prototype-name' => '__name2__',
-                    'data-entry-add-label' => 'Add Tag',
-                    'data-entry-remove-label' => 'Remove Tag',
+                    // 'data-prototype-name' => '__name2__',
+                    // 'data-entry-add-label' => 'Add Tag',
+                    // 'data-entry-remove-label' => 'Remove Tag',
 
                 ]
             ])
-            ->add("validate", SubmitType::class, [
-                // 'attr' => [
-                //     'data-action' => "modal-form#submitForm"
-                // ]
+            ->add('_token', HiddenType::class, [
+                'mapped' => false, // CSRF tokens should not be mapped to the entity
+
+                'csrf_protection' => true,
+                'csrf_field_name' => '_csrf_token',
+                'csrf_token_id' => 'jobOffers_config_form', // A unique identifier for this form
             ])
+            // ->add("validate", SubmitType::class, [
+            //     'attr' => [
+            //         'data-action' => "modal-form#submitForm"
+            //     ]
+            // ])
         ;
     }
 

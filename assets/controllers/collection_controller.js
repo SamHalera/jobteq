@@ -11,51 +11,36 @@ import { Controller } from "@hotwired/stimulus";
  */
 export default class extends Controller {
   connect() {
-    this.index = this.element.childElementCount;
-    const btnAddElement = document.createElement("button");
-    btnAddElement.innerHTML = "add";
-    btnAddElement.setAttribute("type", "button");
-    btnAddElement.setAttribute(
-      "class",
-      "btn btn-outline-info align-self-center"
-    );
-    btnAddElement.addEventListener("click", (e) => {
-      console.log("Adding item");
-      this.addItemRow(e);
-    });
-    this.element.append(btnAddElement);
+    const btnAdd = document.querySelectorAll(".btn-add");
+    const btnRemove = document.querySelectorAll(".btn-remove");
+
+    btnAdd.forEach((btn) => btn.addEventListener("click", this.addNewItemRow));
+    btnRemove.forEach((btn) => btn.addEventListener("click", this.itemRemove));
   }
 
-  addItemRow = (e) => {
-    e.preventDefault();
+  addNewItemRow = (e) => {
+    const collectionHolder = document.querySelector(
+      e.currentTarget.dataset.collection
+    );
+    let index = collectionHolder.dataset.index;
+
+    const prototype = collectionHolder.dataset.prototype;
+
     const itemRow = document
       .createRange()
       .createContextualFragment(
-        this.element.dataset["prototype"].replace(/__name__/g, this.index)
+        prototype.replace(/__name__/g, index)
       ).firstElementChild;
-    itemRow.setAttribute("class", "bg-light p-4 rounded-2 my-4 shadow-sm");
 
-    this.index++;
-    this.createBtnRemoveItem(itemRow);
-
-    e.currentTarget.insertAdjacentElement("beforebegin", itemRow);
+    collectionHolder.insertAdjacentElement("beforeend", itemRow);
+    collectionHolder.dataset.index++;
+    const btnRemove = document.querySelectorAll(".btn-remove");
+    btnRemove.forEach((btn) => btn.addEventListener("click", this.itemRemove));
   };
 
-  /**
-   * @param {HTMLElement} item
-   */
-  createBtnRemoveItem = (item) => {
-    const btnElt = document.createElement("span");
-    btnElt.id = item.id;
-    btnElt.classList.add("btn", "btn-danger");
-    btnElt.textContent = "remove";
+  itemRemove = (e) => {
+    const itemToRemove = e.currentTarget.closest(".item");
 
-    item.appendChild(btnElt);
-    btnElt.addEventListener("click", (e) => {
-      e.preventDefault();
-
-      item.remove();
-    });
-    return btnElt;
+    itemToRemove.remove();
   };
 }
