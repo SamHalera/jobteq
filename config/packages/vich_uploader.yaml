@@ -1,0 +1,8 @@
+vich_uploader:
+  db_driver: orm
+
+  mappings:
+    jobOffers:
+      uri_prefix: /images/uploads/job-offers
+      upload_destination: "%kernel.project_dir%/public/images/uploads/job-offers"
+      namer: Vich\UploaderBundle\Naming\SmartUniqueNamer
