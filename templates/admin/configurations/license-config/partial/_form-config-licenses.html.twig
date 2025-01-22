@@ -1,0 +1,19 @@
+<div class="form-wrapper w-75 mx-auto">
+
+	{{form_start(form)}}
+	{{ form_widget(form._csrf_token) }}
+	{{form_row(form.name)}}
+
+	<div class="border border-primary p-3 rounded my-3" data-controller="collection">
+		<label>Licenses</label>
+		<div id="license_config_licenses" data-prototype="{{include('admin/configurations/license-config/partial/_form-license.html.twig', {form : form.licenses.vars.prototype})|e('html_attr')}}" data-index="{{form.licenses|length > 0 ? form.licenses|last.vars.name + 1 : 0}}" class="d-flex flex-wrap gap-4">
+			{% for license in form.licenses %}
+				{{include('admin/configurations/license-config/partial/_form-license.html.twig', {form : license} )}}
+			{% endfor %}
+
+		</div>
+		<button type="button" class="btn btn-outline-info align-self-center btn-add" data-collection="#license_config_licenses">add</button>
+	</div>
+	<button type="submit" class="btn btn-primary btn-add">{{btnText}}</button>
+	{{form_end(form, {render_rest: false})}}
+</div>

@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\Uid\Uuid;
 
 #[Route('/jobteq/admin')]
 #[IsGranted('ROLE_RECRUITER')]
@@ -31,8 +32,21 @@ class JobOfferAdminController extends AbstractController
         $jobOffer = new JobOffer();
         $form = $this->createForm(JobOfferType::class, $jobOffer);
 
+
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+
+            // /**
+            //  * @var UploadedFile $file
+            //  */
+
+            // $file = $form->get('thumbnailFile')->getData();
+            // $extension = $file->getClientOriginalExtension();
+            // $fileName =  bin2hex(random_bytes(4)) . '_' . uniqid() . '.' . $extension;
+
+            // $publicFolder = $this->getParameter('kernel.project_dir') . '/public/uploads/job-offers';
+            // $file->move($publicFolder, $fileName);
+            // $jobOffer->setThumbnail($fileName);
 
             $em->persist($jobOffer);
             $em->flush();
@@ -57,6 +71,7 @@ class JobOfferAdminController extends AbstractController
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+
 
             $em->persist($jobOffer);
             $em->flush();

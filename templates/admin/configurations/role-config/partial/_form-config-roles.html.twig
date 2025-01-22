@@ -1,0 +1,19 @@
+<div class="form-wrapper w-75 mx-auto">
+
+	{{form_start(form)}}
+	{{ form_widget(form._csrf_token) }}
+	{{form_row(form.name)}}
+
+	<div class="border border-primary p-3 rounded my-3" data-controller="collection">
+		<label>Roles</label>
+		<div id="role_config_roles" data-prototype="{{include('admin/configurations/role-config/partial/_form-role.html.twig', {form : form.roles.vars.prototype})|e('html_attr')}}" data-index="{{form.roles|length > 0 ? form.roles|last.vars.name + 1 : 0}}" class="d-flex flex-wrap gap-4">
+			{% for role in form.roles %}
+				{{include('admin/configurations/role-config/partial/_form-role.html.twig', {form : role} )}}
+			{% endfor %}
+
+		</div>
+		<button type="button" class="btn btn-outline-info align-self-center btn-add" data-collection="#role_config_roles">add</button>
+	</div>
+	<button type="submit" class="btn btn-primary btn-add">{{btnText}}</button>
+	{{form_end(form, {render_rest: false})}}
+</div>
