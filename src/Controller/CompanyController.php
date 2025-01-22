@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Company;
 use App\Entity\User;
 use App\Form\CompanyRegistrationType;
+use App\Form\CompanyType;
 use App\Repository\LicenseRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -12,14 +13,39 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
+#[IsGranted('ROLE_MANAGER')]
+#[Route('/manager')]
 class CompanyController extends AbstractController
 {
-    #[Route('/company', name: 'app_company')]
-    public function index(): Response
+    #[Route('/company/{id}', name: 'app_company')]
+    public function index(Company $company, Request $request, EntityManagerInterface $em): Response
     {
+
+        $form = $this->createForm(CompanyType::class, $company);
+        $form->handleRequest($request);
+
+        $logoFile = $form->get('logoFile')->getData();
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+
+
+            $em->persist($company);
+            $em->flush();
+
+            $this->addFlash('success', 'Your company informations have been updated!');
+            return $this->redirectToRoute('app_company', [
+                'id' => $company->getId(),
+                'company' => $company,
+                'form' => $form
+            ]);
+        }
+
         return $this->render('company/index.html.twig', [
-            'controller_name' => 'CompanyController',
+            'company' => $company,
+            'form' => $form
         ]);
     }
     #[Route('/company/register/', name: 'app_company_register')]
@@ -76,7 +102,9 @@ class CompanyController extends AbstractController
             $this->createNotFoundException();
         }
 
-        $company->setLicense($license);
+        $company
+            ->setLicense($license)
+            ->setEnabled(true);
 
         $em->flush();
 

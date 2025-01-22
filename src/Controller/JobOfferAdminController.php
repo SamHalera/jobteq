@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\JobOffer;
+use App\Entity\User;
 use App\Form\JobOfferType;
 use App\Repository\JobOfferRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -33,6 +34,14 @@ class JobOfferAdminController extends AbstractController
         $form = $this->createForm(JobOfferType::class, $jobOffer);
 
 
+        $user = $this->getUser();
+
+        $userCompany = null;
+
+        if ($user instanceof User) {
+            $userCompany = $user->getCompany();
+        }
+
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
 
@@ -48,6 +57,7 @@ class JobOfferAdminController extends AbstractController
             // $file->move($publicFolder, $fileName);
             // $jobOffer->setThumbnail($fileName);
 
+            $jobOffer->setCompany($userCompany);
             $em->persist($jobOffer);
             $em->flush();
 

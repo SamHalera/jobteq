@@ -1,0 +1,16 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+	<div class='container'>
+		<h1>Find your favourite companies</h1>
+
+
+		<div class="d-flex flex-wrap gap-4">
+
+			{% for company in companies %}
+				{% include "/main/partials/_company.html.twig" %}
+			{% endfor %}
+		</div>
+
+	</div>
+{% endblock %}
