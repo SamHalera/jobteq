@@ -7,8 +7,12 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\File;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CompanyRepository::class)]
+#[Vich\Uploadable()]
 class Company
 {
     #[ORM\Id]
@@ -19,10 +23,6 @@ class Company
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-
-
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $logo = null;
 
     #[ORM\Column]
     private ?bool $isEnabled = false;
@@ -45,10 +45,31 @@ class Company
     #[ORM\OneToMany(targetEntity: Invitation::class, mappedBy: 'company')]
     private Collection $invitations;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $logo = null;
+
+    #[Vich\UploadableField(mapping: 'company', fileNameProperty: 'logo')]
+    #[Assert\Image()]
+    private ?File $logoFile = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $image = null;
+
+    #[Vich\UploadableField(mapping: 'company', fileNameProperty: 'image')]
+    #[Assert\Image()]
+    private ?File $imageFile = null;
+
+    /**
+     * @var Collection<int, JobOffer>
+     */
+    #[ORM\OneToMany(targetEntity: JobOffer::class, mappedBy: 'company', orphanRemoval: true)]
+    private Collection $jobOffers;
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
         $this->invitations = new ArrayCollection();
+        $this->jobOffers = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -68,19 +89,6 @@ class Company
         return $this;
     }
 
-
-
-    public function getLogo(): ?string
-    {
-        return $this->logo;
-    }
-
-    public function setLogo(string $logo): static
-    {
-        $this->logo = $logo;
-
-        return $this;
-    }
 
     public function isEnabled(): ?bool
     {
@@ -178,6 +186,81 @@ class Company
             // set the owning side to null (unless already changed)
             if ($invitation->getCompany() === $this) {
                 $invitation->setCompany(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getLogo(): ?string
+    {
+        return $this->logo;
+    }
+
+    public function setLogo(string $logo): static
+    {
+        $this->logo = $logo;
+
+        return $this;
+    }
+    public function getLogoFile(): ?File
+    {
+        return $this->logoFile;
+    }
+
+    public function setLogoFile(File $logoFile): static
+    {
+        $this->logoFile = $logoFile;
+
+        return $this;
+    }
+    public function getImage(): ?string
+    {
+        return $this->image;
+    }
+
+    public function setImage(?string $image): static
+    {
+        $this->image = $image;
+
+        return $this;
+    }
+    public function getImageFile(): ?File
+    {
+        return $this->imageFile;
+    }
+
+    public function setImageFile(?File $imageFile): static
+    {
+        $this->imageFile = $imageFile;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, JobOffer>
+     */
+    public function getJobOffers(): Collection
+    {
+        return $this->jobOffers;
+    }
+
+    public function addJobOffer(JobOffer $jobOffer): static
+    {
+        if (!$this->jobOffers->contains($jobOffer)) {
+            $this->jobOffers->add($jobOffer);
+            $jobOffer->setCompany($this);
+        }
+
+        return $this;
+    }
+
+    public function removeJobOffer(JobOffer $jobOffer): static
+    {
+        if ($this->jobOffers->removeElement($jobOffer)) {
+            // set the owning side to null (unless already changed)
+            if ($jobOffer->getCompany() === $this) {
+                $jobOffer->setCompany(null);
             }
         }
 

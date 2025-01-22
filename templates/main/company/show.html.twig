@@ -1,0 +1,24 @@
+{% extends "base.html.twig" %}
+{% block body %}
+	<div class="container">
+
+		<a href="{{path('app_company_index')}}" class="btn btn-info my-4">back</a>
+		<div>
+			<img src="{{vich_uploader_asset(company, 'imageFile')}}" class="w-25 img-thumbnail" alt=" ">
+		</div>
+		<h1>
+			<span class="text-primary">{{company.name}}</span>
+		</h1>
+
+		<img src="{{vich_uploader_asset(company, 'logoFile')}}" class="w-25 img-thumbnail" alt=" ">
+		<p>{{company.description}}</p>
+
+		<div class="d-flex gap-4">
+			{% for jobOffer in company.jobOffers %}
+
+				{{include('main/partials/_jobOfferCard.html.twig')}}
+			{% endfor %}
+		</div>
+
+	</div>
+{% endblock %}
