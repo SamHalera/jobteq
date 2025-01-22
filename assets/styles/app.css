@@ -24,6 +24,7 @@ div#role_config_roles fieldset {
 .img-logo {
   height: 100px;
   width: 100px;
+  object-fit: cover;
 }
 .img-card-jobteq {
   height: 250px;
@@ -32,4 +33,7 @@ div#role_config_roles fieldset {
 .logo-position-card {
   top: 75%;
   right: 10%;
+}
+.object-cover {
+  object-fit: cover;
 }

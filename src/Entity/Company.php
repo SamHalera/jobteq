@@ -8,11 +8,10 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
-use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CompanyRepository::class)]
-#[Vich\Uploadable()]
+
 class Company
 {
     #[ORM\Id]
@@ -48,14 +47,14 @@ class Company
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $logo = null;
 
-    #[Vich\UploadableField(mapping: 'company', fileNameProperty: 'logo')]
+
     #[Assert\Image()]
     private ?File $logoFile = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $image = null;
 
-    #[Vich\UploadableField(mapping: 'company', fileNameProperty: 'image')]
+
     #[Assert\Image()]
     private ?File $imageFile = null;
 
@@ -203,17 +202,7 @@ class Company
 
         return $this;
     }
-    public function getLogoFile(): ?File
-    {
-        return $this->logoFile;
-    }
 
-    public function setLogoFile(File $logoFile): static
-    {
-        $this->logoFile = $logoFile;
-
-        return $this;
-    }
     public function getImage(): ?string
     {
         return $this->image;
@@ -225,17 +214,7 @@ class Company
 
         return $this;
     }
-    public function getImageFile(): ?File
-    {
-        return $this->imageFile;
-    }
 
-    public function setImageFile(?File $imageFile): static
-    {
-        $this->imageFile = $imageFile;
-
-        return $this;
-    }
 
     /**
      * @return Collection<int, JobOffer>

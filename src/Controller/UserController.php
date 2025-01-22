@@ -5,7 +5,9 @@ namespace App\Controller;
 use App\Entity\Invitation;
 use App\Entity\InvitationStatusEnum;
 use App\Entity\User;
+use App\Form\UserProfileType;
 use App\Service\SessionManagerService;
+use App\Service\UploaderService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -66,7 +68,46 @@ class UserController extends AbstractController
         return $this->render('user/decline-feedback.html.twig', [
             'invitation' => $invitation
         ]);
+    }
 
-        // return $this->redirectToRoute('app_manager_invitation_index');
+    #[Route('/profile', name: 'app_user_profile')]
+    public function profile(EntityManagerInterface $em, Request $request, UploaderService $uploader): Response
+    {
+        $user = $this->getUser();
+
+        $form = $this->createForm(UserProfileType::class, $user);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+
+
+            $file = $form->get('thumbnailFile')->getData();
+            $publicFolder = $this->getParameter('kernel.project_dir') . '/public/uploads/user';
+
+            $fileName = $uploader->uploadFile($file, $publicFolder);
+
+            $olderThumbnail = null;
+            if ($user instanceof User) {
+                $olderThumbnail = $user->getThumbnail();
+                $user->setThumbnail($fileName);
+            }
+
+            $em->persist($user);
+            $em->flush();
+            if ($olderThumbnail) {
+                unlink($publicFolder . '/' . $olderThumbnail);
+            }
+
+            $this->addFlash('success', 'Your profile has been updated');
+
+            return $this->redirectToRoute('app_user_profile', [
+                'user' => $user,
+                'form' => $form
+            ]);
+        }
+        return $this->render('user/profile/index.html.twig', [
+            'user' => $user,
+            'form' => $form
+        ]);
     }
 }
