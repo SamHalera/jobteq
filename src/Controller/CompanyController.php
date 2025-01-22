@@ -7,6 +7,7 @@ use App\Entity\User;
 use App\Form\CompanyRegistrationType;
 use App\Form\CompanyType;
 use App\Repository\LicenseRepository;
+use App\Service\UploaderService;
 use Doctrine\ORM\EntityManagerInterface;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -20,20 +21,35 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class CompanyController extends AbstractController
 {
     #[Route('/company/{id}', name: 'app_company')]
-    public function index(Company $company, Request $request, EntityManagerInterface $em): Response
+    public function index(Company $company, Request $request, EntityManagerInterface $em, UploaderService $uploader): Response
     {
 
         $form = $this->createForm(CompanyType::class, $company);
         $form->handleRequest($request);
 
-        $logoFile = $form->get('logoFile')->getData();
 
         if ($form->isSubmitted() && $form->isValid()) {
 
+            $logoFile = $form->get('logoFile')->getData();
+            $imageFile = $form->get('imageFile')->getData();
+            $publicFolder = $this->getParameter('kernel.project_dir') . '/public/uploads/company';
+
+            $logoName = $uploader($logoFile, $publicFolder);
+            $imageName = $uploader($imageFile, $publicFolder);
+            $olderLogo = $company->getLogo();
+            $olderImage = $company->getImage();
+
+            $company
+                ->setLogo($logoName)
+                ->setImage($imageName)
+            ;
 
 
             $em->persist($company);
             $em->flush();
+
+            if ($olderLogo) unlink($publicFolder . '/' . $olderLogo);
+            if ($olderImage) unlink($publicFolder . '/' . $olderImage);
 
             $this->addFlash('success', 'Your company informations have been updated!');
             return $this->redirectToRoute('app_company', [
@@ -49,16 +65,31 @@ class CompanyController extends AbstractController
         ]);
     }
     #[Route('/company/register/', name: 'app_company_register')]
-    public function userRecruiterRegister(Request $request, EntityManagerInterface $em): Response
+    public function userRecruiterRegister(Request $request, EntityManagerInterface $em, UploaderService $uploader): Response
     {
 
         $company = new Company();
-        $form = $this->createForm(CompanyRegistrationType::class, $company);
+        $form = $this->createForm(CompanyType::class, $company);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
 
+            $logoFile = $form->get('logoFile')->getData();
+            $imageFile = $form->get('imageFile')->getData();
+            $publicFolder = $this->getParameter('kernel.project_dir') . '/public/uploads/company';
+
+            $logoName = $uploader($logoFile, $publicFolder);
+            $imageName = $uploader($imageFile, $publicFolder);
+
+            $company
+                ->setLogo($logoName)
+                ->setImage($imageName)
+            ;
+
+
+            $em->persist($company);
+            $em->flush();
             $user = $this->getUser();
             if ($user instanceof User) {
                 $user->setCompany($company);
