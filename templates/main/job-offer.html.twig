@@ -6,6 +6,44 @@
 {% block body %}
 
 
-	<div>
-		<h1>{{jobOffer.title}}<h1></div>
-		{% endblock %}
+	<div class="container">
+		<h1>{{jobOffer.title}}</h1>
+		<div clss='d-flex flex-column'>
+			<p class="fst-italic">published at
+				{{jobOffer.publishedAt|date('d/m/Y')}}</p>
+			<p>
+				{% if jobOffer.minSalary %}
+					{{jobOffer.minSalary}}K€
+				{% endif %}
+				{% if jobOffer.maxSalary %}
+					-
+					{{jobOffer.maxSalary}}K€
+				{% endif %}
+
+
+			</p>
+			<p class="text-primary fw-bold">{{jobOffer.category.name}}</p>
+			<div>
+				{% for tag in jobOffer.tags %}
+					<span class="badge rounded-pill bg-info text-dark">{{tag.name}}</span>
+				{% endfor %}
+			</div>
+
+		</div>
+
+
+		<section>
+			<h2>About
+				{{jobOffer.company.name}}</h2>
+			<p>{{jobOffer.company.description}}</p>
+		</section>
+		<section>
+			<h2>About the offer</h2>
+			<p>{{jobOffer.description}}</p>
+		</section>
+		<section>
+			<h2>Requirements</h2>
+			<p>{{jobOffer.requirements}}</p>
+		</section>
+	</div>
+{% endblock %}

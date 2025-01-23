@@ -64,6 +64,22 @@ class JobOffer
     #[ORM\JoinColumn(nullable: false)]
     private ?Company $company = null;
 
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $requirements = null;
+
+    #[ORM\ManyToOne(inversedBy: 'jobOffers')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $author = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $minSalary = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $maxSalary = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $publishedAt = null;
+
 
     public function __construct()
     {
@@ -217,6 +233,66 @@ class JobOffer
     public function setCompany(?Company $company): static
     {
         $this->company = $company;
+
+        return $this;
+    }
+
+    public function getRequirements(): ?string
+    {
+        return $this->requirements;
+    }
+
+    public function setRequirements(?string $requirements): static
+    {
+        $this->requirements = $requirements;
+
+        return $this;
+    }
+
+    public function getAuthor(): ?User
+    {
+        return $this->author;
+    }
+
+    public function setAuthor(?User $author): static
+    {
+        $this->author = $author;
+
+        return $this;
+    }
+
+    public function getMinSalary(): ?int
+    {
+        return $this->minSalary;
+    }
+
+    public function setMinSalary(?int $minSalary): static
+    {
+        $this->minSalary = $minSalary;
+
+        return $this;
+    }
+
+    public function getMaxSalary(): ?int
+    {
+        return $this->maxSalary;
+    }
+
+    public function setMaxSalary(?int $maxSalary): static
+    {
+        $this->maxSalary = $maxSalary;
+
+        return $this;
+    }
+
+    public function getPublishedAt(): ?\DateTimeImmutable
+    {
+        return $this->publishedAt;
+    }
+
+    public function setPublishedAt(?\DateTimeImmutable $publishedAt): static
+    {
+        $this->publishedAt = $publishedAt;
 
         return $this;
     }
