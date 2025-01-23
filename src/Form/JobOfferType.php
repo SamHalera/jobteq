@@ -12,6 +12,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EnumType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -29,11 +30,28 @@ class JobOfferType extends AbstractType
 
             ])
             ->add('description', TextareaType::class, [
-                'required' => true
+                'required' => true,
+                'attr' => [
+                    'rows' => 5
+                ]
             ])
-            ->add('thumbnailFile', FileType::class, [
+            ->add('requirements', TextareaType::class, [
+                'required' => true,
+                'attr' => [
+                    'rows' => 5
+                ]
+            ])
+            ->add('minSalary', NumberType::class, [
                 'required' => false,
+
             ])
+            ->add('maxSalary', NumberType::class, [
+                'required' => false,
+
+            ])
+            // ->add('thumbnailFile', FileType::class, [
+            //     'required' => false,
+            // ])
             ->add('category', EntityType::class, [
                 'class' => Category::class,
                 'choice_label' => 'name'
