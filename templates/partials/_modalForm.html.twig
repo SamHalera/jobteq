@@ -1,0 +1,23 @@
+<div class="modal fade" data-modal-form-target="modal" tabindex="-1" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">
+					{{modalTitle}}
+				</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body" data-modal-form-target='modalBody'>
+				<div>
+					{{form_start(form, {'attr' : {'novalidate' : true}})}}
+					{# {{form_row(form.name)}} #}
+					{{form_end(form)}}
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel
+				</button>
+			</div>
+		</div>
+	</div>
+</div>

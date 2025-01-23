@@ -1,0 +1,14 @@
+{% extends "base.html.twig" %}
+{% block body %}
+
+
+	<div class="container my-5">
+		<a href="{{path('app_manager_invitation_index')}}" class="btn btn-info">back</a>
+		<h1 class="my-5">Edit INVITATION</h1>
+		{{form_start(form)}}
+
+
+		{{form_end(form)}}
+
+	</div>
+{% endblock %}

@@ -1,0 +1,40 @@
+version: "3.9"
+services:
+  db_jobteq:
+    image: "mysql:latest"
+
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_USER: ${DB_USER}
+    ports:
+      # To allow the host machine to access the ports below, modify the lines below.
+      # For example, to allow the host to connect to port 3306 on the container, you would change
+      # "3306" to "3306:3306". Where the first port is exposed to the host and the second is the container port.
+      # See https://docs.docker.com/compose/compose-file/#ports for more information.
+      - "3306:3306"
+    networks:
+      - dev
+
+    volumes:
+      - db_data:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin
+    container_name: phpmyadmin_jobteq_sy7
+    # restart: always
+    depends_on:
+      - db_jobteq
+    ports:
+      - 8080:80
+    environment:
+      PMA_HOST: db_jobteq
+    networks:
+      - dev
+
+networks:
+  dev:
+
+volumes:
+  db_data:

@@ -1,0 +1,19 @@
+vich_uploader:
+  db_driver: orm
+
+  mappings:
+    jobOffers:
+      uri_prefix: /uploads/job-offers
+      upload_destination: "%kernel.project_dir%/public/uploads/job-offers"
+      namer: Vich\UploaderBundle\Naming\SmartUniqueNamer
+      # inject_on_load: false
+    # company:
+    #   uri_prefix: /uploads/company
+    #   upload_destination: "%kernel.project_dir%/public/uploads/company"
+    #   namer: Vich\UploaderBundle\Naming\SmartUniqueNamer
+    # inject_on_load: false
+    # user:
+    #   uri_prefix: /uploads/user
+    #   upload_destination: "%kernel.project_dir%/public/uploads/user"
+    #   namer: Vich\UploaderBundle\Naming\SmartUniqueNamer
+    # inject_on_load: false

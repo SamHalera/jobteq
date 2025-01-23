@@ -1,0 +1,36 @@
+{% extends "base.html.twig" %}
+
+{% block title %}
+	PROFILE |
+	{{user.firstname}}
+{% endblock %}
+
+
+{% block body %}
+
+	<div class="container">
+		<h1>MY PROFILE</h1>
+
+		<div class="d-flex flex-wrap gap-4">
+			{{form_start(form)}}
+			{{form_row(form.email)}}
+			{{form_row(form.firstname)}}
+			{{form_row(form.lastname)}}
+			<div class="d-flex gap-4 align-items-end">
+				{% if user.thumbnail %}
+
+					<img src="{{asset('uploads/user/'~ user.thumbnail)}}" class=' img-fluid img-thumbnail mx-auto img-logo rounded-circle' alt="">
+				{% else %}
+
+					<img src="/images/profile-default.jpg" class=' img-fluid img-thumbnail mx-auto img-logo rounded-circle' alt="">
+				{% endif %}
+
+
+				{{form_row(form.thumbnailFile)}}
+			</div>
+			{{form_row(form.company)}}
+
+			{{form_end(form)}}
+		</div>
+	</div>
+{% endblock %}

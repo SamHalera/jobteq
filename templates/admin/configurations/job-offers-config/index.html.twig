@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}ADMIN | Job offers Cofiguration
+{% endblock %}
+
+{% block body %}
+
+	<div class="container">
+		<a href="{{path('app_admin_config_index')}}" class="btn btn-primary my-4">back to configurations</a>
+		<h1 class="text-primary">
+			{{jobConfig.name}}
+
+		</h1>
+		<form action="{{path('app_admin_config_delete', {id: jobConfig.id})}}" data-action="modal-confirmation#onSubmit" method="POST" {{stimulus_controller('modal-confirmation', {formUrl : path('app_admin_config_delete', {id: jobConfig.id} ), title : 'Remove this config?' , icon: 'warning' , confirmbuttontext: 'Yes remove it' , submitasync: true } )}}>
+			<input type="hidden" name="_token" value="{{ csrf_token('remove_item') }}"/>
+			<button class="btn btn-danger">
+				{{ ux_icon('bi:trash3', { height: '30px', width: '30px'}) }}
+			</button>
+		</form>
+
+
+		{{include('admin/configurations/job-offers-config/partial/_form-config.html.twig',{ btnText: "Update"})}}
+	</div>
+{% endblock %}

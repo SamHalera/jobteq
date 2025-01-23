@@ -1,0 +1,18 @@
+<div>
+	<h2 class="text-primary">
+		{{app.user.firstname}}
+		{{app.user.lastname}}
+		- MANAGER
+
+	</h2>
+
+	<pre>
+
+</pre>
+	{% if app.user.company is null %}
+
+		<a href="{{path('app_company_register')}}" class="btn btn-primary">company registration</a>
+	{% endif %}
+
+
+</div>

@@ -1,0 +1,30 @@
+<div class="card" style="width: 18rem;">
+	<div class="position-relative">
+		{% if company.image %}
+			<img src="{{vich_uploader_asset(company, 'imageFile')}}" class="card-img-top h-15 img-card-jobteq" alt=" ">
+		{% else %}
+			<div class="bg-secondary img-card-jobteq"></div>
+		{% endif %}
+		<div class="position-absolute logo-position-card">
+			{% if company.logo %}
+				<img src="{{vich_uploader_asset(company, 'logoFile')}}" class=" img-logo rounded-circle" alt=" ">
+			{% else %}
+				<div class="bg-secondary img-card-jobteq"></div>
+			{% endif %}
+		</div>
+
+	</div>
+
+	<div class="card-body">
+		<h5 class="card-title">{{company.name}}</h5>
+		<p class="card-text">{{company.description|slice(0,100)}}</p>
+
+		{% if company.jobOffers|length > 0%}
+			<a href="#">{{company.jobOffers|length}}</a>
+
+		{% endif %}
+
+		<a href="{{path('app_company_show', {id: company.id})}}" class="btn btn-primary text-end">Go</a>
+
+	</div>
+</div>

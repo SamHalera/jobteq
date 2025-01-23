@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	{{ company.name }}
+{% endblock %}
+
+{% block body %}
+
+
+	<div class="container">
+		<div class="m-4 text-center">
+			<img src="{{asset('uploads/company/' ~ company.logo)}}" class=' img-fluid img-thumbnail mx-auto img-logo rounded-circle' alt="">
+			<h1>{{ company.name }}</h1>
+			<a href="{{path('app_company_show', {id : company.id})}}" class="btn btn-outline-info">public view</a>
+		</div>
+
+
+		<div class="form-wrapper w-75 mx-auto">
+
+
+			{{form_start(form)}}
+
+			{{form_row(form.name)}}
+			{{form_row(form.description)}}
+			<div class="d-flex align-items-end gap-5 mb-3">
+				<img src="{{asset('uploads/company/' ~ company.logo)}}" class='w-25 img-fluid img-thumbnail' alt="">
+				{{form_row(form.logoFile)}}
+			</div>
+			<div class="d-flex align-items-end gap-5">
+				<img src="{{asset('uploads/company/' ~ company.image)}}" class='w-25 img-fluid img-thumbnail' alt="">
+				{{form_row(form.imageFile)}}
+			</div>
+
+			{{form_end(form)}}
+
+		</div>
+
+	</div>
+{% endblock %}

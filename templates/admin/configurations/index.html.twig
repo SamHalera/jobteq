@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}ADMIN | Configurations
+{% endblock %}
+
+{% block body %}
+
+	<div class="container">
+		<h1 class="text-primary">Configurations</h1>
+
+
+		<div class="d-flex justify-content-center gap-4">
+
+			<div class="card text-center" style="width: 20rem;">
+				<div class="card-body">
+					<h4 class="card-title">Job Offer Configurations</h4>
+					<p class="card-text">Configurations for job offers</p>
+					{% if jobOffersConfigurations|length > 0 %}
+						<a href="{{path('app_admin_job_offers_config_index', {id : jobOffersConfigurations[0].id})}}" class="">{{jobOffersConfigurations[0].name}}</a>
+					{% else %}
+
+						<a href="{{path('app_admin_config_create')}}" class="btn btn-primary">Create config</a>
+					{% endif %}
+				</div>
+			</div>
+			<div class="card text-center" style="width: 20rem;">
+				<div class="card-body">
+					<h4 class="card-title">Licence Configurations</h4>
+					<p class="card-text">Configurations for companys' license</p>
+					{% if licensesConfigurations|length > 0 %}
+						<a href="{{path('app_admin_license_config_index', {id : licensesConfigurations[0].id})}}" class="">{{licensesConfigurations[0].name}}</a>
+					{% else %}
+
+						<a href="{{path('app_admin_license_config_create')}}" class="btn btn-primary">Create config</a>
+					{% endif %}
+
+				</div>
+			</div>
+			<div class="card text-center" style="width: 20rem;">
+				<div class="card-body">
+					<h4 class="card-title">Roles Configurations</h4>
+					<p class="card-text">Configurations for users' roles</p>
+					{% if rolesConfigurations|length > 0 %}
+						<a href="{{path('app_admin_role_config_index', {id : rolesConfigurations[0].id})}}" class="">{{rolesConfigurations[0].name}}</a>
+
+					{% else %}
+
+						<a href="{{path('app_admin_role_config_create')}}" class="btn btn-primary">Create config</a>
+					{% endif %}
+
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}

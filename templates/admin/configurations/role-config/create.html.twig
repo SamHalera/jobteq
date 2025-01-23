@@ -1,0 +1,9 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+
+	<div class="container" {{stimulus_controller('reload' )}}>
+		<h1 class="mb-4">Role Configurations</h1>
+		{{include('admin/configurations/role-config/partial/_form-config-roles.html.twig',{ btnText: "Create"})}}
+	</div>
+{% endblock %}

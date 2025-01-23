@@ -1,0 +1,82 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}INVITATIONS
+{% endblock %}
+
+{% block body %}
+
+
+	<div class="container">
+		<h1 class="my-5">Invitations</h1>
+
+		<div>
+			<a href="{{path('app_manager_invitation_create')}}" class="btn btn-primary">new invitation</a>
+		</div>
+
+		<table class="table table-stripped">
+			<thead>
+				<tr class="text-center">
+					<th>ID</th>
+					<th>Name</th>
+					<th>Created at</th>
+					<th>Status</th>
+					<th>Sendings</th>
+					<th>Actions</th>
+				</tr>
+			</thead>
+			<tbody>
+
+
+				{% for invitation in invitations %}
+
+					{% set statusClass = "warning" %}
+					{% if invitation.statusString == "accepted" %}
+						{% set statusClass = "success" %}
+					{% elseif invitation.statusString == "declined" %}
+
+						{% set statusClass = "danger" %}
+					{% endif %}
+
+					<tr class="text-center">
+						<td>{{invitation.id}}</td>
+						<td>{{invitation.email}}</td>
+						<td>{{invitation.createdAt|date('Y/m/d')}}</td>
+						<td>
+							<span class="badge rounded-pill bg-{{statusClass}}">{{invitation.statusString}}
+							</span>
+						</td>
+						<td>
+							{{invitation.sendings}}
+						</td>
+						<td class="d-flex gap-3 justify-content-center bg-light">
+							<a href="{{path('app_manager_invitation_edit', {id : invitation.id})}}" class="btn btn-warning">edit</a>
+
+							<form action="{{path('app_manager_invitation_resend_email', {id : invitation.id})}}" data-action="modal-confirmation#onSubmit" method="POST" {{stimulus_controller('modal-confirmation', { title : 'Send a new email?', text: 'Do you want to send a new email to ' ~ invitation.email ~ '?', icon: 'warning', confirmButtonText: 'Yes a do', submitAsync: true } )}}>
+								<input type="hidden" name="_token" value="{{ csrf_token('send_email') }}"/>
+								<button class="btn btn-info">
+									{{ ux_icon('bi:envelope', { height: '20px', width: '20px'}) }}
+									resend email
+								</button>
+							</form>
+							<form action="{{path('app_manager_invitation_delete', {id : invitation.id})}}" data-action="modal-confirmation#onSubmit" method="POST" {{stimulus_controller('modal-confirmation', { title : 'Remove this invitation?', icon: 'warning', confirmButtonText: 'Yes remove it', submitAsync: true } )}}>
+								<input type="hidden" name="_token" value="{{ csrf_token('remove_item') }}"/>
+								<button class="btn btn-danger">
+									delete
+								</button>
+							</form>
+
+						</td>
+					</tr>
+
+
+				{% else %}
+					<tr>
+						<td class="text-center py-4 text-info fw-bold" colspan="5">No Invitations</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+
+		</table>
+
+	</div>
+{% endblock %}

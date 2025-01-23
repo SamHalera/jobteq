@@ -1,0 +1,31 @@
+<div class="form-wrapper w-75 mx-auto">
+
+	{{form_start(form)}}
+
+	{{ form_widget(form._csrf_token) }}
+	{{form_row(form.name)}}
+
+	<div class="border border-primary p-3 rounded my-3" data-controller="collection">
+		<label>Categories</label>
+		<div id="job_offers_configuration_categories" data-prototype="{{include('admin/configurations/job-offers-config/partial/_form-category.html.twig', {form : form.categories.vars.prototype})|e('html_attr')}}" data-index="{{form.categories|length > 0 ? form.categories|last.vars.name + 1 : 0}}" class="d-flex flex-wrap gap-4">
+			{% for category in form.categories %}
+				{{include('admin/configurations/job-offers-config/partial/_form-category.html.twig', {form : category} )}}
+
+			{% endfor %}
+		</div>
+		<button type="button" class="btn btn-outline-info align-self-center btn-add" data-collection="#job_offers_configuration_categories">add</button>
+	</div>
+	<div class="border border-primary p-3 rounded my-3">
+		<label>Tags</label>
+		<div id="job_offers_configuration_tags" data-prototype="{{include('admin/configurations/job-offers-config/partial/_form-category.html.twig', {form : form.tags.vars.prototype})|e('html_attr')}}" data-index="{{form.tags|length > 0 ? form.tags|last.vars.name + 1 : 0}}" class="d-flex flex-wrap gap-4">
+			{% for tag in form.tags %}
+				{{include('admin/configurations/job-offers-config/partial/_form-tag.html.twig', {form : tag} )}}
+			{% endfor %}
+		</div>
+		<button type="button" class="btn btn-outline-info align-self-center btn-add" data-collection="#job_offers_configuration_tags">add</button>
+	</div>
+
+	<button type="submit" class="btn btn-primary">{{btnText}}</button>
+
+	{{form_end(form, {render_rest : false})}}
+</div>

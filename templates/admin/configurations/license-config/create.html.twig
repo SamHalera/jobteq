@@ -1,0 +1,14 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+
+	<div class="container">
+		<a href="{{path('app_admin_config_index')}}" class="btn btn-primary my-4">back to configurations</a>
+		<h1 class="mb-4">License Configurations</h1>
+
+
+		{{include('admin/configurations/license-config/partial/_form-config-licenses.html.twig', {btnText : "Create"} )}}
+
+
+	</div>
+{% endblock %}

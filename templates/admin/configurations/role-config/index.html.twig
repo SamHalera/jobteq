@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}ADMIN | Role Cofiguration
+{% endblock %}
+
+{% block body %}
+
+	<div class="container" {{stimulus_controller('reload' )}}>
+		<h1 class="text-primary">
+			{{roleConfig.name}}
+
+		</h1>
+		<form action="{{path('app_admin_role_config_delete', {id: roleConfig.id})}}" data-action="modal-confirmation#onSubmit" method="POST" {{stimulus_controller('modal-confirmation', {formUrl : path('app_admin_role_config_delete', {id: roleConfig.id} ), title : 'Remove this config?' , icon: 'warning' , confirmbuttontext: 'Yes remove it' , submitasync: true } )}}>
+			<input type="hidden" name="_token" value="{{ csrf_token('remove_item') }}"/>
+			<button class="btn btn-danger">
+				{{ ux_icon('bi:trash3', { height: '30px', width: '30px'}) }}
+			</button>
+		</form>
+
+		{{include('admin/configurations/role-config/partial/_form-config-roles.html.twig',{ btnText: "Update"})}}
+
+	</div>
+{% endblock %}
