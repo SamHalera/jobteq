@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Candidate
+{% endblock %}
+
+{% block body %}
+	<div class="container">
+
+		<a href="{{ path('app_candidate_index') }}" class="btn btn-primary my-5">back to list</a>
+		<h1 class="text-center">Create new Candidate Profile</h1>
+
+
+		{{ include('candidate/_form.html.twig') }}
+
+	</div>
+{% endblock %}

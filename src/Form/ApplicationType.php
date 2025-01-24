@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\Application;
 use App\Entity\JobOffer;
 use App\Entity\User;
+use App\Repository\CandidateRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
@@ -18,6 +19,12 @@ use Symfony\Component\Validator\Constraints\Image;
 
 class ApplicationType extends AbstractType
 {
+
+    private CandidateRepository $candidateRepo;
+    public function __construct(CandidateRepository $candidateRepo)
+    {
+        $this->candidateRepo = $candidateRepo;
+    }
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
@@ -31,6 +38,12 @@ class ApplicationType extends AbstractType
                     ])
                 ]
 
+            ])
+            ->add('customPresentation', TextareaType::class, [
+                'data' => $this->candidateRepo->findPresentation(),
+                'attr' => [
+                    'rows' => 10
+                ]
             ])
             ->add('motivationalMessage', TextareaType::class, [
                 'attr' => [

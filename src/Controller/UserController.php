@@ -6,6 +6,7 @@ use App\Entity\Invitation;
 use App\Entity\InvitationStatusEnum;
 use App\Entity\User;
 use App\Form\UserProfileType;
+use App\Repository\ApplicationRepository;
 use App\Service\SessionManagerService;
 use App\Service\UploaderService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -20,12 +21,36 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class UserController extends AbstractController
 {
     #[Route('/dashboard', name: 'app_user_dashboard')]
-    public function index(): Response
+    public function index(ApplicationRepository $applicationRepo): Response
     {
 
         // $user->setRoles(["ROLE_RECRUITER"]);
 
-        return $this->render('user/dashboard.html.twig');
+        /**
+         * @var \App\Entity\User $user
+         */
+        $user = $this->getUser();
+        $optionsData = [
+            'user' => $user
+        ];
+
+
+
+        if ($this->isGranted('ROLE_CANDIDATE')) {
+            $optionsData = [
+                'candidate' => $user->getCandidate()
+            ];
+        } elseif ($this->isGranted('ROLE_RECRUITER')) {
+
+            $applications = $applicationRepo->findBy([
+                'examiner' => $user->getId()
+            ]);
+
+            $optionsData['applications'] = $applications;
+        }
+
+
+        return $this->render('user/dashboard.html.twig', $optionsData);
     }
     #[Route('/add-candidate-role/{id}', name: 'app_user_candidate_register')]
     public function addCandidateRole(User $user, EntityManagerInterface $em): Response

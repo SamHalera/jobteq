@@ -23,6 +23,24 @@
 				<h4>{{user.email}}</h4>
 			</div>
 			{{form_start(form)}}
+			<div class="d-flex gap-4 align-items-end my-5">
+				<a href="{{path('app_resume_pdf', {id : user.candidate.id})}}" target="_blank">
+					<div class="p-4 bg-light rounded text-center shadow-sm ">
+						<p>My resume</p>
+						{{ ux_icon('bi:filetype-pdf', {height: 50, width: 50} )}}
+					</div>
+				</a>
+				<div>
+					<p class="text-info fst-italic">Use you candidate resume or upload a new one</p>
+					{{form_row(form.resumeFile)}}
+				</div>
+			</div>
+
+			<div>
+				<p class="text-info fst-italic">Use your Candidate presentation or wrire a new one just for this application:</p>
+				{{form_row(form.customPresentation)}}
+			</div>
+			{{form_row(form.motivationalMessage)}}
 			{{form_end(form)}}
 		</div>
 	</div>

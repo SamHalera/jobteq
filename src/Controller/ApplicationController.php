@@ -30,8 +30,10 @@ class ApplicationController extends AbstractController
         JobOffer $jobOffer,
         EntityManagerInterface $em,
         UploaderService $uploader,
-        Request $request
+        Request $request,
+
     ): Response {
+
 
         if (!$this->isGranted('IS_AUTHENTICATED')) {
 
@@ -46,10 +48,35 @@ class ApplicationController extends AbstractController
         /** @var \App\Entity\User $user */
         $user = $this->getUser();
 
+
         if (!$user) {
             //THROW EXCEPTION!
         }
+
+        $candidate = $user->getCandidate();
+
+
+
+        foreach ($candidate->getApplications() as $value) {
+
+
+            if ($value->getJobOffer()->getId() === $jobOffer->getId()) {
+
+
+                $this->addFlash('danger', 'You have already applied for this offer');
+                return $this->redirectToRoute('app_job_offer_public', [
+                    'slug' => $jobOffer->getSlug()
+                ]);
+            }
+        }
+
         $application = new Application();
+
+        $candidate->addApplication($application);
+
+        $resumeName = $candidate->getResume();
+
+
         $form = $this->createForm(ApplicationType::class, $application);
 
         $form->handleRequest($request);
@@ -57,11 +84,18 @@ class ApplicationController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
+            // dd($form->getData());
+
+
             $resumeFile = $form->get('resumeFile')->getData();
-            $publicFolder = $this->getParameter('kernel.project_dir') . '/public/uploads/application';
-            $resumeName = $uploader->uploadFile($resumeFile, $publicFolder);
+
+            if ($resumeFile) {
+
+                $publicFolder = $this->getParameter('kernel.project_dir') . '/public/uploads/application';
+                $resumeName = $uploader->uploadFile($resumeFile, $publicFolder);
+            }
             $application
-                ->setCandidate($user)
+                ->setCandidate($candidate)
                 ->setExaminer($jobOffer->getAuthor())
                 ->setStatus(StatusApplicationEnum::PENDING)
                 ->setResume($resumeName)

@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Candidate index
+{% endblock %}
+
+{% block body %}
+	<div class="container">
+		<div class="text-center">
+
+			<h1>Candidate Profile</h1>
+
+
+		</div>
+
+		<div class="d-flex flex-column gap-4 align-items-center">
+
+			<img src="{{asset('/uploads/user/' ~ user.thumbnail)}}" width="200" height="200" class="rounded-circle" alt="">
+			<h2>{{user.firstname}}
+				{{user.lastname}}</h2>
+
+			<div class="w-75 d-flex flex-column gap-4 align-items-center">
+				<p>{{user.candidate.presentation}}</p>
+				<a href="{{path('app_resume_pdf', {id : user.candidate.id})}}" target="_blank">
+					<div class=" p-4 bg-light rounded text-center shadow-sm ">
+						<p>My resume</p>
+						{{ ux_icon('bi:filetype-pdf', {height: 50, width: 50} )}}
+					</div>
+				</a>
+			</div>
+
+		</div>
+
+	</div>
+
+
+{% endblock %}

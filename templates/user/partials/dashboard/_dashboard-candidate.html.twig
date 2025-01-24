@@ -1,9 +1,64 @@
 <div>
-	<h2 class="text-primary">
+	<h2 class="text-primary text-center">
 		{{app.user.firstname}}
 		{{app.user.lastname}}
-		- CANDIDATE
-
 	</h2>
+
+
+	{% if app.user.candidate is null %}
+
+		<div class="d-flex flex-column align-items-center py-5 mb-2 bg-light text-dark gap-4">
+			<h3>You have to upload a resume and write a presentation in order to apply for job offers</h3>
+			<a href="{{path('app_candidate_new')}}" class="btn btn-primary">create your candidate profile</a>
+		</div>
+
+	{% else %}
+		<div>
+			<h2>My Applications</h2>
+			<table class="table table-stripped">
+				<thead>
+					<tr class="text-center">
+						<th>N°</th>
+						<th>JobOffer</th>
+						<th>Sended at</th>
+						<th>Status</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for application in candidate.applications %}
+
+						{% set statusClass = "warning" %}
+						{% if application.statusString == "accepted" %}
+							{% set statusClass = "success" %}
+						{% elseif application.statusString == "in_progress" %}
+							{% set statusClass = "info" %}
+						{% elseif application.statusString == "rejected" %}
+							{% set statusClass = "danger" %}
+						{% endif %}
+
+						<tr class="text-center">
+							<td>{{loop.index}}</td>
+							<td>{{application.jobOffer.title}}</td>
+							<td>{{application.createdAt|date('Y/m/d')}}</td>
+							<td>
+								<span class="badge rounded-pill bg-{{statusClass}}">{{application.statusString}}
+								</span>
+							</td>
+
+
+						</tr>
+
+
+					{% else %}
+						<tr>
+							<td class="text-center py-4 text-info fw-bold" colspan="5">No Applications</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+
+			</table>
+		</div>
+
+	{% endif %}
 
 </div>

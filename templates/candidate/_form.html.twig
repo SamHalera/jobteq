@@ -1,0 +1,12 @@
+<div class="mx-auto w-75">
+
+	<div class="text-center">
+		<h2 class="text-primary">{{app.user.firstname}}
+			{{app.user.lastname}}</h2>
+		<h3 class="text-primary">{{app.user.email}}</h3>
+	</div>
+	{{ form_start(form) }}
+	{{ form_widget(form) }}
+	<button class="btn btn-primary">{{ button_label|default('Save') }}</button>
+	{{ form_end(form) }}
+</div>

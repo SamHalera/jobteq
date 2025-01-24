@@ -23,9 +23,7 @@ class Application
     #[Timestampable(on: 'update')]
     private ?\DateTimeImmutable $updatedAt = null;
 
-    #[ORM\ManyToOne(inversedBy: 'applications')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?User $candidate = null;
+
 
     #[ORM\ManyToOne(inversedBy: 'applications')]
     #[ORM\JoinColumn(nullable: false)]
@@ -43,6 +41,13 @@ class Application
     #[ORM\ManyToOne(inversedBy: 'examinerApplications')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $examiner = null;
+
+    #[ORM\ManyToOne(inversedBy: 'applications')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Candidate $candidate = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $customPresentation = null;
 
 
     public function getId(): ?int
@@ -74,17 +79,7 @@ class Application
         return $this;
     }
 
-    public function getCandidate(): ?User
-    {
-        return $this->candidate;
-    }
 
-    public function setCandidate(?User $candidate): static
-    {
-        $this->candidate = $candidate;
-
-        return $this;
-    }
 
     public function getJobOffer(): ?JobOffer
     {
@@ -147,6 +142,30 @@ class Application
     public function setExaminer(?User $examiner): static
     {
         $this->examiner = $examiner;
+
+        return $this;
+    }
+
+    public function getCandidate(): ?Candidate
+    {
+        return $this->candidate;
+    }
+
+    public function setCandidate(?Candidate $candidate): static
+    {
+        $this->candidate = $candidate;
+
+        return $this;
+    }
+
+    public function getCustomPresentation(): ?string
+    {
+        return $this->customPresentation;
+    }
+
+    public function setCustomPresentation(?string $customPresentation): static
+    {
+        $this->customPresentation = $customPresentation;
 
         return $this;
     }

@@ -22,6 +22,8 @@
 				{% include "user/partials/menu/_user-superadmin-menu.html.twig" %}
 			{% elseif is_granted('ROLE_MANAGER') %}
 				{% include "user/partials/menu/_user-manager-menu.html.twig" %}
+			{% elseif is_granted('ROLE_CANDIDATE') %}
+				{% include "user/partials/menu/_user-candidate-menu.html.twig" %}
 			{% endif %}
 
 			<li>

@@ -66,11 +66,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: JobOffer::class, mappedBy: 'author')]
     private Collection $jobOffers;
 
-    /**
-     * @var Collection<int, Application>
-     */
-    #[ORM\OneToMany(targetEntity: Application::class, mappedBy: 'candidate', orphanRemoval: true)]
-    private Collection $applications;
+
 
     /**
      * @var Collection<int, Application>
@@ -78,11 +74,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Application::class, mappedBy: 'examiner')]
     private Collection $examinerApplications;
 
+    #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
+    private ?Candidate $candidate = null;
+
     public function __construct()
     {
         $this->invitations = new ArrayCollection();
         $this->jobOffers = new ArrayCollection();
-        $this->applications = new ArrayCollection();
+
         $this->examinerApplications = new ArrayCollection();
     }
 
@@ -270,35 +269,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @return Collection<int, Application>
-     */
-    public function getApplications(): Collection
-    {
-        return $this->applications;
-    }
 
-    public function addApplication(Application $application): static
-    {
-        if (!$this->applications->contains($application)) {
-            $this->applications->add($application);
-            $application->setCandidate($this);
-        }
-
-        return $this;
-    }
-
-    public function removeApplication(Application $application): static
-    {
-        if ($this->applications->removeElement($application)) {
-            // set the owning side to null (unless already changed)
-            if ($application->getCandidate() === $this) {
-                $application->setCandidate(null);
-            }
-        }
-
-        return $this;
-    }
 
     /**
      * @return Collection<int, Application>
@@ -326,6 +297,23 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $examinerApplication->setExaminer(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCandidate(): ?Candidate
+    {
+        return $this->candidate;
+    }
+
+    public function setCandidate(Candidate $candidate): static
+    {
+        // set the owning side of the relation if necessary
+        if ($candidate->getUser() !== $this) {
+            $candidate->setUser($this);
+        }
+
+        $this->candidate = $candidate;
 
         return $this;
     }
