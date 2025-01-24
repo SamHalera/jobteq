@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\RegistrationFormType;
 use App\Service\SessionManagerService;
+use App\Service\UploaderService;
 use App\Service\UserInvitationManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -18,7 +19,7 @@ use Symfony\Component\Routing\Attribute\Route;
 class RegistrationController extends AbstractController
 {
     #[Route('/register', name: 'app_register')]
-    public function register(Request $request, SessionManagerService $sessionManagerService, UserPasswordHasherInterface $userPasswordHasher, FormFactoryInterface $formFactory, Security $security, EntityManagerInterface $entityManager, UserInvitationManager $userInvitationManager): Response
+    public function register(Request $request, SessionManagerService $sessionManagerService, UserPasswordHasherInterface $userPasswordHasher, FormFactoryInterface $formFactory, Security $security, EntityManagerInterface $entityManager, UserInvitationManager $userInvitationManager, UploaderService $uploader): Response
     {
 
         if ($this->getUser()) {
@@ -62,6 +63,12 @@ class RegistrationController extends AbstractController
             // encode the plain password
             $user->setPassword($userPasswordHasher->hashPassword($user, $plainPassword));
 
+            $file = $form->get('thumbnailFile')->getData();
+            $publicFolder = $this->getParameter('kernel.project_dir') . '/public/uploads/user';
+
+            $fileName = $uploader->uploadFile($file, $publicFolder);
+
+            $user->setThumbnail($fileName);
 
             $entityManager->persist($user);
             $entityManager->flush();

@@ -80,10 +80,17 @@ class JobOffer
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $publishedAt = null;
 
+    /**
+     * @var Collection<int, Application>
+     */
+    #[ORM\OneToMany(targetEntity: Application::class, mappedBy: 'jobOffer')]
+    private Collection $applications;
+
 
     public function __construct()
     {
         $this->tags = new ArrayCollection();
+        $this->applications = new ArrayCollection();
     }
 
 
@@ -293,6 +300,36 @@ class JobOffer
     public function setPublishedAt(?\DateTimeImmutable $publishedAt): static
     {
         $this->publishedAt = $publishedAt;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Application>
+     */
+    public function getApplications(): Collection
+    {
+        return $this->applications;
+    }
+
+    public function addApplication(Application $application): static
+    {
+        if (!$this->applications->contains($application)) {
+            $this->applications->add($application);
+            $application->setJobOffer($this);
+        }
+
+        return $this;
+    }
+
+    public function removeApplication(Application $application): static
+    {
+        if ($this->applications->removeElement($application)) {
+            // set the owning side to null (unless already changed)
+            if ($application->getJobOffer() === $this) {
+                $application->setJobOffer(null);
+            }
+        }
 
         return $this;
     }

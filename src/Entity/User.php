@@ -66,10 +66,24 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: JobOffer::class, mappedBy: 'author')]
     private Collection $jobOffers;
 
+    /**
+     * @var Collection<int, Application>
+     */
+    #[ORM\OneToMany(targetEntity: Application::class, mappedBy: 'candidate', orphanRemoval: true)]
+    private Collection $applications;
+
+    /**
+     * @var Collection<int, Application>
+     */
+    #[ORM\OneToMany(targetEntity: Application::class, mappedBy: 'examiner')]
+    private Collection $examinerApplications;
+
     public function __construct()
     {
         $this->invitations = new ArrayCollection();
         $this->jobOffers = new ArrayCollection();
+        $this->applications = new ArrayCollection();
+        $this->examinerApplications = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -250,6 +264,66 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($jobOffer->getAuthor() === $this) {
                 $jobOffer->setAuthor(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Application>
+     */
+    public function getApplications(): Collection
+    {
+        return $this->applications;
+    }
+
+    public function addApplication(Application $application): static
+    {
+        if (!$this->applications->contains($application)) {
+            $this->applications->add($application);
+            $application->setCandidate($this);
+        }
+
+        return $this;
+    }
+
+    public function removeApplication(Application $application): static
+    {
+        if ($this->applications->removeElement($application)) {
+            // set the owning side to null (unless already changed)
+            if ($application->getCandidate() === $this) {
+                $application->setCandidate(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Application>
+     */
+    public function getExaminerApplications(): Collection
+    {
+        return $this->examinerApplications;
+    }
+
+    public function addExaminerApplication(Application $examinerApplication): static
+    {
+        if (!$this->examinerApplications->contains($examinerApplication)) {
+            $this->examinerApplications->add($examinerApplication);
+            $examinerApplication->setExaminer($this);
+        }
+
+        return $this;
+    }
+
+    public function removeExaminerApplication(Application $examinerApplication): static
+    {
+        if ($this->examinerApplications->removeElement($examinerApplication)) {
+            // set the owning side to null (unless already changed)
+            if ($examinerApplication->getExaminer() === $this) {
+                $examinerApplication->setExaminer(null);
             }
         }
 

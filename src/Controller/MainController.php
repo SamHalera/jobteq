@@ -32,8 +32,26 @@ class MainController extends AbstractController
         JobOffer $jobOffer
     ): Response {
 
+        /**
+         * @var User $user
+         */
+        $user = $this->getUser();
+
+        /**
+         * @var Application $application
+         */
+        $application = null;
+
+        foreach ($jobOffer->getApplications() as $value) {
+
+
+            if ($value->getCandidate()->getId() === $user->getId()) {
+                $application = $value;
+            }
+        }
         return $this->render('main/job-offer.html.twig', [
-            'jobOffer' => $jobOffer
+            'jobOffer' => $jobOffer,
+            'application' => $application
         ]);
     }
 
