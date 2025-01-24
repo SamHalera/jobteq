@@ -1,0 +1,71 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Application
+{% endblock %}
+
+{% block body %}
+
+
+	<div class="container my-5">
+		<div class='text-center mb-4'>
+			<h1>Application of
+				{{ application.candidate.user.firstname }}
+				{{ application.candidate.user.lastname }}
+			</h1>
+			{% if application.candidate.user.thumbnail %}
+
+				<img src="{{asset('uploads/user/'~ application.candidate.user.thumbnail)}}" width="200" height="200" class="rounded-circle" alt="">
+			{% else %}
+
+				<img src="/images/profile-default.jpg" width="200" height="200" class="rounded-circle" alt="">
+			{% endif %}
+		</div>
+		<div class="text-center mx-auto mb-5 sticky-sm-top bg-light shadow-sm p-5 w-50">
+			<h4 class="text-info">Mark application as :</h4>
+			<div class="d-flex gap-4 justify-content-center">
+
+				{% for status in statusApplication %}
+					{% set statusClass = "warning" %}
+					{% if status == "accepted" %}
+						{% set statusClass = "success" %}
+					{% elseif status == "under study" %}
+						{% set statusClass = "info" %}
+					{% elseif status == "rejected" %}
+						{% set statusClass = "danger" %}
+					{% endif %}
+					{% if status != application.statusString %}
+
+						<form action="{{path('app_recruiter_application_action', {id : application.id, status : status})}}" data-action="modal-confirmation#onSubmit" method="POST" {{stimulus_controller('modal-confirmation', { title : 'Do you want to mark this application as ' ~ status ~ '?', text: 'Candidate will be notified!', icon: 'warning', confirmButtonText: 'Yes a do', submitAsync: true } )}}>
+							<input type="hidden" name="_token" value="{{ csrf_token('status') }}"/>
+							<button class="btn btn-{{statusClass}}">
+								{{status}}
+							</button>
+						</form>
+					{% endif %}
+
+				{% endfor %}
+
+			</div>
+		</div>
+
+		<div class="w-25 mx-auto mb-4">
+			<a href="{{path('app_resume_pdf', {id : application.candidate.id})}}" target="_blank">
+				<div class=" p-4 bg-light rounded text-center shadow-sm ">
+					<p>See the Resume</p>
+					{{ ux_icon('bi:filetype-pdf', {height: 50, width: 50} )}}
+				</div>
+			</a>
+		</div>
+
+		<section class="bg-light rounded shadow-sm p-5 mb-5">
+			<h2>Candidate's presentation</h2>
+			<p>{{application.customPresentation}}</p>
+		</section>
+		<section class="bg-light rounded shadow-sm p-5">
+			<h2>Candidate's motivational message</h2>
+			<p>{{application.motivationalMessage}}</p>
+		</section>
+
+
+	</div>
+{% endblock %}

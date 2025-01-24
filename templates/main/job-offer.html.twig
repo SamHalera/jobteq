@@ -8,7 +8,7 @@
 
 	<div class="container">
 		<h1>{{jobOffer.title}}</h1>
-		<div clss='d-flex flex-column'>
+		<div class='d-flex flex-column mb-4'>
 			<p class="fst-italic">published at
 				{{jobOffer.publishedAt|date('d/m/Y')}}</p>
 			<p>
@@ -45,5 +45,28 @@
 			<h2>Requirements</h2>
 			<p>{{jobOffer.requirements}}</p>
 		</section>
+
+
+		<div class="d-flex justify-content-center">
+			{% if app.user %}
+
+				{% if application %}
+
+					<p class="fw-bold fs-4 text-info">You have already applied for this offer at
+						{{application.createdAt|date('d/m/y')}}</p>
+				{% else %}
+
+					<a href="{{path('app_application_create', {slug : jobOffer.slug})}}" class="btn btn-primary">Apply</a>
+				{% endif %}
+
+
+			{% else %}
+
+				<a href="{{path('app_application_create', {slug : jobOffer.slug})}}" class="btn btn-primary">Apply</a>
+
+			{% endif %}
+
+
+		</div>
 	</div>
 {% endblock %}

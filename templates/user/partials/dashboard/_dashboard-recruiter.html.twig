@@ -1,9 +1,60 @@
 <div>
 	<h2 class="text-primary">
-		{{app.user.firstname}}
-		{{app.user.lastname}}
+		{{user.firstname}}
+		{{user.lastname}}
 		- RECRUITER
 
 	</h2>
+
+	<div>
+		<h2>Applications</h2>
+		<table class="table table-stripped">
+			<thead>
+				<tr class="text-center">
+					<th>N°</th>
+					<th>JobOffer</th>
+					<th>Candidate</th>
+					<th>Sended at</th>
+					<th>Status</th>
+					<th>Actions</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for application in applications %}
+
+					{% set statusClass = "warning" %}
+					{% if application.statusString == "accepted" %}
+						{% set statusClass = "success" %}
+					{% elseif application.statusString == "under study" %}
+						{% set statusClass = "info" %}
+					{% elseif application.statusString == "rejected" %}
+						{% set statusClass = "danger" %}
+					{% endif %}
+
+					<tr class="text-center">
+						<td>{{loop.index}}</td>
+						<td>{{application.jobOffer.title}}</td>
+						<td>{{application.candidate.user.firstname}}
+							{{application.candidate.user.lastname}}</td>
+						<td>{{application.createdAt|date('Y/m/d')}}</td>
+						<td>
+							<span class="badge rounded-pill bg-{{statusClass}}">{{application.statusString}}
+							</span>
+						</td>
+						<td>
+							<a href="{{path('app_recruiter_application', {id: application.id})}}">{{ ux_icon('mdi:eye', {height:30, width:30}) }}</a>
+						</td>
+					</tr>
+
+
+				{% else %}
+					<tr>
+						<td class="text-center py-4 text-info fw-bold" colspan="5">No Applications</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+
+		</table>
+	</div>
 
 </div>

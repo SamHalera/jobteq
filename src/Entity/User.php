@@ -66,10 +66,23 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: JobOffer::class, mappedBy: 'author')]
     private Collection $jobOffers;
 
+
+
+    /**
+     * @var Collection<int, Application>
+     */
+    #[ORM\OneToMany(targetEntity: Application::class, mappedBy: 'examiner')]
+    private Collection $examinerApplications;
+
+    #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
+    private ?Candidate $candidate = null;
+
     public function __construct()
     {
         $this->invitations = new ArrayCollection();
         $this->jobOffers = new ArrayCollection();
+
+        $this->examinerApplications = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -252,6 +265,55 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $jobOffer->setAuthor(null);
             }
         }
+
+        return $this;
+    }
+
+
+
+    /**
+     * @return Collection<int, Application>
+     */
+    public function getExaminerApplications(): Collection
+    {
+        return $this->examinerApplications;
+    }
+
+    public function addExaminerApplication(Application $examinerApplication): static
+    {
+        if (!$this->examinerApplications->contains($examinerApplication)) {
+            $this->examinerApplications->add($examinerApplication);
+            $examinerApplication->setExaminer($this);
+        }
+
+        return $this;
+    }
+
+    public function removeExaminerApplication(Application $examinerApplication): static
+    {
+        if ($this->examinerApplications->removeElement($examinerApplication)) {
+            // set the owning side to null (unless already changed)
+            if ($examinerApplication->getExaminer() === $this) {
+                $examinerApplication->setExaminer(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getCandidate(): ?Candidate
+    {
+        return $this->candidate;
+    }
+
+    public function setCandidate(Candidate $candidate): static
+    {
+        // set the owning side of the relation if necessary
+        if ($candidate->getUser() !== $this) {
+            $candidate->setUser($this);
+        }
+
+        $this->candidate = $candidate;
 
         return $this;
     }
