@@ -7,6 +7,7 @@ use App\Entity\JobOffer;
 use App\Entity\JobOfferStatusEnum;
 use App\Entity\StatusEnum;
 use App\Entity\Tag;
+use App\Repository\CategoryRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EnumType;
@@ -18,10 +19,16 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Choice;
 use Symfony\Component\Validator\Constraints\Image;
+use Symfony\Component\Validator\Constraints\NotNull;
 
 class JobOfferType extends AbstractType
 {
+
+
+
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
@@ -53,8 +60,9 @@ class JobOfferType extends AbstractType
             //     'required' => false,
             // ])
             ->add('category', EntityType::class, [
+                'required' => true,
                 'class' => Category::class,
-                'choice_label' => 'name'
+                'choice_label' => 'name',
             ])
             ->add('tags', EntityType::class, [
                 'class' => Tag::class,

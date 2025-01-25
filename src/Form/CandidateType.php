@@ -14,13 +14,21 @@ use Symfony\Component\Form\FormBuilderInterface;
 
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\File;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\NotNull;
 
 class CandidateType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('title', TextType::class)
+            ->add('title', TextType::class, [
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Title is required'
+                    ])
+                ]
+            ])
             ->add('presentation', TextareaType::class, [
                 'attr' => [
                     'rows' => 10
@@ -28,7 +36,11 @@ class CandidateType extends AbstractType
             ])
             ->add('resumeFile', FileType::class, [
                 'mapped' => false,
+                'required' => true,
                 'constraints' => [
+                    new NotNull([
+                        'message' => 'Please don\'t forget to upload a resume'
+                    ]),
                     new File([
                         'mimeTypes' => [
                             'application/pdf',
