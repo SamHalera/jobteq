@@ -23,9 +23,11 @@ class JobOffer
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(['message' => 'Title is required'])]
     private ?string $title = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Assert\NotBlank(['message' => 'Description is required'])]
     private ?string $description = null;
 
     #[ORM\Column]
@@ -44,7 +46,7 @@ class JobOffer
     private ?string $slug = null;
 
     #[ORM\ManyToOne(inversedBy: 'jobOffers')]
-    #[ORM\JoinColumn(nullable: true)]
+
     private ?Category $category = null;
 
     /**

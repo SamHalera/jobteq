@@ -11,6 +11,7 @@
         "doctrine/doctrine-bundle": "^2.13",
         "doctrine/doctrine-migrations-bundle": "^3.3",
         "doctrine/orm": "^3.3",
+        "league/commonmark": "^2.6",
         "php-cs-fixer/shim": "^3.67",
         "stof/doctrine-extensions-bundle": "^1.13",
         "symfony/asset": "7.2.*",
@@ -35,6 +36,7 @@
         "symfony/validator": "7.2.*",
         "symfony/yaml": "7.2.*",
         "twig/extra-bundle": "^2.12|^3.0",
+        "twig/markdown-extra": "^3.18",
         "twig/twig": "^2.12|^3.0",
         "vich/uploader-bundle": "^2.5"
     },

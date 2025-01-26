@@ -42,7 +42,7 @@ class MainController extends AbstractController
          */
         $application = null;
 
-        if ($user) {
+        if ($user && $user->getCandidate()) {
 
             foreach ($user->getCandidate()->getApplications() as $value) {
 

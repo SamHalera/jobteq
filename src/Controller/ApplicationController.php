@@ -55,9 +55,17 @@ class ApplicationController extends AbstractController
 
         $candidate = $user->getCandidate();
 
+        if (!$candidate) {
 
+
+            $path = $this->generateUrl('app_candidate_new');
+
+            $this->addFlash('danger', "In order to apply, you have to create your <a href='$path'>Candidate Profile.</a>");
+            return $this->redirectToRoute('app_job_offer_public', ['slug' => $jobOffer->getSlug()]);
+        }
 
         foreach ($candidate->getApplications() as $value) {
+
 
 
             if ($value->getJobOffer()->getId() === $jobOffer->getId()) {

@@ -1,0 +1,65 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}JOBTEQ | DASHBOARD
+{% endblock %}
+
+{% block body %}
+
+
+	<div class="container">
+		<h1 class="mb-4">JOB OFFERS</h1>
+
+		<div>
+			<a href="{{path('app_user_dashboard')}}" class="btn btn-primary">back to dashboard</a>
+		</div>
+
+		<table class="table table-stripped">
+			<thead>
+				<tr class="text-center">
+					<th>ID</th>
+					<th>Recruiter</th>
+					<th>Title</th>
+					<th>Created at</th>
+					<th>Status</th>
+					<th>Actions</th>
+				</tr>
+			</thead>
+			<tbody>
+
+
+				{% for job in jobOffers %}
+
+					{% set statusClass = "primary" %}
+					{% if job.statusString == "draft" %}
+						{% set statusClass = "warning" %}
+					{% elseif job.statusString == "archived" %}
+						{% set statusClass = "secondary" %}
+
+					{% endif %}
+
+					<tr class="text-center">
+						<td>{{job.id}}</td>
+						<td>{{job.author.firstname}}
+							{{job.author.lastname}}</td>
+						<td>{{job.title}}</td>
+						<td>{{job.createdAt|date('Y/m/d')}}</td>
+						<td>
+							<span class="badge rounded-pill bg-{{statusClass}}">{{job.statusString}}
+							</span>
+						</td>
+						<td class="d-flex gap-3 justify-content-center bg-light">
+							<a href="#">{{ ux_icon('mdi:eye', {height:30, width:30}) }}</a>
+						</td>
+					</tr>
+
+
+				{% else %}
+					<tr>
+						<td class="text-center py-4 text-info fw-bold" colspan="5">No JobOffer</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+
+		</table>
+	</div>
+{% endblock %}

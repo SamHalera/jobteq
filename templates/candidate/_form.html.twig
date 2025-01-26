@@ -5,7 +5,7 @@
 			{{app.user.lastname}}</h2>
 		<h3 class="text-primary">{{app.user.email}}</h3>
 	</div>
-	{{ form_start(form) }}
+	{{ form_start(form, {'attr' :{'novalidate' :true}}) }}
 	{{ form_widget(form) }}
 	<button class="btn btn-primary">{{ button_label|default('Save') }}</button>
 	{{ form_end(form) }}

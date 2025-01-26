@@ -80,6 +80,7 @@ class RegistrationFormType extends AbstractType
         if ($options['add_roles_field']) {
             $builder->add('youAre', ChoiceType::class, [
                 'mapped' => false,
+                'required' => true,
                 'expanded' => true,
                 'multiple' => false,
                 'choices' => [
