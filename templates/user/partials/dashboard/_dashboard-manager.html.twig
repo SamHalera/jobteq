@@ -1,17 +1,33 @@
 <div>
-	<h2 class="text-primary">
-		{{app.user.firstname}}
-		{{app.user.lastname}}
+	<h2 class="text-primary text-center">
+		{{user.firstname}}
+		{{user.lastname}}
 		- MANAGER
 
 	</h2>
 
-	<pre>
-
-</pre>
-	{% if app.user.company is null %}
-
+	{% if user.company is null %}
 		<a href="{{path('app_company_register')}}" class="btn btn-primary">company registration</a>
+	{% else %}
+
+
+		<div class='d-flex justify-content-center gap-5'>
+
+			<div class="card" style="width: 18rem;">
+				<img src="{{asset('/uploads/company/' ~ user.company.image)}}" height="200" class="card-img-top object-cover" alt="...">
+				<div class="card-body">
+					<h5 class="card-title">{{user.company.name}}</h5>
+					<a href="{{path('app_company', {id : user.company.id})}}" class="btn btn-primary">company page</a>
+				</div>
+			</div>
+			<div class="card" style="width: 18rem;">
+				<img src="{{asset('/images/joboffers.avif')}}" height="200" class="card-img-top object-cover" alt="...">
+				<div class="card-body">
+					<h5 class="card-title">Job Offers</h5>
+					<a href="{{path('app_manager_jobOffers', {id : user.company.id})}}" class="btn btn-primary">job offers</a>
+				</div>
+			</div>
+		</div>
 	{% endif %}
 
 

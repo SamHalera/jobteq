@@ -24,6 +24,7 @@ class UserController extends AbstractController
     public function index(ApplicationRepository $applicationRepo): Response
     {
 
+        $this->denyAccessUnlessGranted("IS_AUTHENTICATED_FULLY");
         // $user->setRoles(["ROLE_RECRUITER"]);
 
         /**

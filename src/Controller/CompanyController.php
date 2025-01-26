@@ -24,6 +24,7 @@ class CompanyController extends AbstractController
     public function index(Company $company, Request $request, EntityManagerInterface $em, UploaderService $uploader): Response
     {
 
+        $this->denyAccessUnlessGranted("IS_AUTHENTICATED_FULLY");
         $form = $this->createForm(CompanyType::class, $company);
         $form->handleRequest($request);
 

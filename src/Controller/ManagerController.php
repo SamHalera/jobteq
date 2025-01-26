@@ -19,6 +19,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Uid\Uuid;
 
 #[IsGranted('ROLE_MANAGER')]
+#[Route('/manager')]
 class ManagerController extends AbstractController
 {
     #[Route('/invitations', name: 'app_manager_invitation_index')]
@@ -131,5 +132,23 @@ class ManagerController extends AbstractController
         $em->flush();
 
         return $this->redirectToRoute('app_manager_invitation_index');
+    }
+
+
+
+
+
+
+    ////JOB OFFER
+
+    #[Route('/job-offers/{id}', name: 'app_manager_jobOffers')]
+    public function jobOffers(Company $company): Response
+    {
+
+        $jobOffers = $company->getJobOffers();
+
+        return $this->render('/manager/job-offers/index.html.twig', [
+            'jobOffers' => $jobOffers
+        ]);
     }
 }
